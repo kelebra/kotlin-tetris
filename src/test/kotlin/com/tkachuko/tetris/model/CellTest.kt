@@ -11,5 +11,6 @@ class CellTest {
 
         assertEquals(0, moved.x)
         assertEquals(1, moved.y)
+        assertEquals(cell.color, moved.color)
     }
 }
