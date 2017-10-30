@@ -1,2 +1,2 @@
 script:
-  - gradlew clean test
+  - ./gradlew clean test
