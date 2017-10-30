@@ -1,16 +1,23 @@
 package com.tkachuko.tetris.model
 
-import kotlin.test.*
-import kotlin.test.assertEquals
+import kotlin.test.Test
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
+@Suppress("unused")
 class CellTest {
 
-    @Test fun cellShouldMoveUpwards(): Unit {
-        val cell = Cell(0, 0)
-        val moved = cell.move(Movement.Down)
+    @Test
+    fun isEmptyByDefault() {
+        val default = Cell(100, 100)
+        assertTrue { default.isEmpty() }
+        assertFalse { default.isFull() }
+    }
 
-        assertEquals(0, moved.x)
-        assertEquals(1, moved.y)
-        assertEquals(cell.color, moved.color)
+    @Test
+    fun isNotEmptyWithCustomColor() {
+        val default = Cell(100, 100, Color.BLUE)
+        assertFalse { default.isEmpty() }
+        assertTrue { default.isFull() }
     }
 }

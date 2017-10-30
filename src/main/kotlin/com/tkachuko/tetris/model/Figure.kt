@@ -2,18 +2,19 @@ package com.tkachuko.tetris.model
 
 import com.tkachuko.tetris.model.Color.*
 
-sealed class Figure(val color: Color)
+enum class Figure(val color: Color) {
 
-object Line : Figure(color = BLUE)
+    Line(color = BLUE),
 
-object Box : Figure(color = YELLOW)
+    Box(color = YELLOW),
 
-object Megenta : Figure(color = PURPLE)
+    Megenta(color = PURPLE),
 
-object RightTurn : Figure(color = GREEN)
+    RightTurn(color = GREEN),
 
-object LeftTurn : Figure(color = RED)
+    LeftTurn(color = RED),
 
-object Inverse : Figure(color = BLUE)
+    Inverse(color = BLUE),
 
-object Outverse : Figure(color = ORANGE)
+    Outverse(color = ORANGE)
+}
