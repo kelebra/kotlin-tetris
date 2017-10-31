@@ -1,19 +1,9 @@
 package com.tkachuko.tetris.model
 
-class TetrisBoard(vertical: Int, horizontal: Int) {
+typealias TetrisBoard = Array<Array<Cell>>
 
-    private val net = Array(
-            vertical,
-            { i ->
-                Array(horizontal,
-                        { j -> Cell(j, i) }
-                )
-            }
-    )
-
-    fun isFull(): Boolean = net.all { it.any { it.isFull() } }
-
-    fun draw(cell: Cell) {
-        net[cell.y][cell.x] = cell
-    }
+fun create(vertical: Int, horizontal: Int, vararg cells: Cell): TetrisBoard {
+    val array = Array(vertical, { i -> Array(horizontal, { j -> Cell(j, i) }) })
+    cells.forEach { array[it.y][it.x] = it }
+    return array
 }
