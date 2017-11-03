@@ -22,7 +22,7 @@ class CellPaintingTest {
     fun shouldPaintCell() {
         val newColor = Color.YELLOW
 
-        val cell = Cell(1, 1, Color.BLUE)
+        val cell = Cell(1, 1, color = Color.BLUE)
         val painted = CellPainting.paint(cell, newColor)
 
         assertEquals(newColor, painted.color)

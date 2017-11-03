@@ -3,6 +3,7 @@ version '1.0-SNAPSHOT'
 
 buildscript {
     ext.kotlin_version = '1.1.4-3'
+    ext.kotlinx_html_version = '0.6.4'
 
     repositories {
         mavenCentral()
@@ -18,11 +19,13 @@ apply plugin: 'kotlin2js'
 apply plugin: 'com.moowork.node'
 
 repositories {
+    jcenter()
     mavenCentral()
 }
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
+    compile "org.jetbrains.kotlinx:kotlinx-html-js:$kotlinx_html_version"
     testCompile "org.jetbrains.kotlin:kotlin-test-js:$kotlin_version"
 }
 
@@ -58,3 +61,14 @@ task runMocha(type: NodeTask, dependsOn: [compileTestKotlin2Js, populateNodeModu
 }
 
 test.dependsOn runMocha
+
+task installBrowserify(type: NpmTask) {
+    args = ['install', 'browserify']
+}
+
+task runBrowserify(type: NodeTask, dependsOn: [compileKotlin2Js, populateNodeModules, installBrowserify]) {
+    script = file('node_modules/.bin/browserify')
+    args = ["${buildDir}/node_modules/${project.name}_main.js", "-o", "bundle.js"]
+}
+
+build.dependsOn runBrowserify

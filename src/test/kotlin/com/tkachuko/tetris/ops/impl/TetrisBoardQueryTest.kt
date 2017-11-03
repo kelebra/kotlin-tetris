@@ -13,12 +13,12 @@ class TetrisBoardQueryTest {
     @Test
     fun boardIsFullWhenAllRowsHaveNonEmptyCell() {
         val board = create(5, 5,
-                Cell(0, 0, Color.BLUE),
-                Cell(1, 1, Color.BLUE),
-                Cell(1, 1, Color.BLUE),
-                Cell(2, 2, Color.BLUE),
-                Cell(3, 3, Color.BLUE),
-                Cell(4, 4, Color.BLUE)
+                Cell(0, 0, color = Color.BLUE),
+                Cell(1, 1, color = Color.BLUE),
+                Cell(1, 1, color = Color.BLUE),
+                Cell(2, 2, color = Color.BLUE),
+                Cell(3, 3, color = Color.BLUE),
+                Cell(4, 4, color = Color.BLUE)
         )
 
         assertTrue { TetrisBoardQuery.isFull(board) }

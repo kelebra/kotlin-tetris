@@ -6,7 +6,7 @@ import com.tkachuko.tetris.ops.def.CellPaintingOps
 
 object CellPainting : CellPaintingOps {
 
-    override fun paint(cell: Cell, color: Color): Cell = Cell(cell.x, cell.y, color)
+    override fun paint(cell: Cell, color: Color): Cell = Cell(cell.x, cell.y, cell.size, color)
 
     override fun erase(cell: Cell): Cell = Cell(cell.x, cell.y)
 }

@@ -16,7 +16,7 @@ class CellTest {
 
     @Test
     fun isNotEmptyWithCustomColor() {
-        val default = Cell(100, 100, Color.BLUE)
+        val default = Cell(100, 100, color = Color.BLUE)
         assertFalse { default.isEmpty() }
         assertTrue { default.isFull() }
     }
