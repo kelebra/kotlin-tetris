@@ -4,13 +4,13 @@
   var Enum = Kotlin.kotlin.Enum;
   Color.prototype = Object.create(Enum.prototype);
   Color.prototype.constructor = Color;
-  Figure.prototype = Object.create(Enum.prototype);
-  Figure.prototype.constructor = Figure;
+  FigureType.prototype = Object.create(Enum.prototype);
+  FigureType.prototype.constructor = FigureType;
   Movement.prototype = Object.create(Enum.prototype);
   Movement.prototype.constructor = Movement;
   function Cell(x, y, size, color) {
     if (size === void 0)
-      size = 0;
+      size = 1;
     if (color === void 0)
       color = Color$EMPTY_getInstance();
     this.x = x;
@@ -110,87 +110,87 @@
     }
   }
   Color.valueOf_61zpoe$ = Color$valueOf;
-  function Figure(name, ordinal, color) {
+  function FigureType(name, ordinal, color) {
     Enum.call(this);
     this.color = color;
     this.name$ = name;
     this.ordinal$ = ordinal;
   }
-  function Figure_initFields() {
-    Figure_initFields = function () {
+  function FigureType_initFields() {
+    FigureType_initFields = function () {
     };
-    Figure$Line_instance = new Figure('Line', 0, Color$BLUE_getInstance());
-    Figure$Box_instance = new Figure('Box', 1, Color$YELLOW_getInstance());
-    Figure$Megenta_instance = new Figure('Megenta', 2, Color$PURPLE_getInstance());
-    Figure$RightTurn_instance = new Figure('RightTurn', 3, Color$GREEN_getInstance());
-    Figure$LeftTurn_instance = new Figure('LeftTurn', 4, Color$RED_getInstance());
-    Figure$Inverse_instance = new Figure('Inverse', 5, Color$BLUE_getInstance());
-    Figure$Outverse_instance = new Figure('Outverse', 6, Color$ORANGE_getInstance());
+    FigureType$Line_instance = new FigureType('Line', 0, Color$BLUE_getInstance());
+    FigureType$Box_instance = new FigureType('Box', 1, Color$YELLOW_getInstance());
+    FigureType$Megenta_instance = new FigureType('Megenta', 2, Color$PURPLE_getInstance());
+    FigureType$RightTurn_instance = new FigureType('RightTurn', 3, Color$GREEN_getInstance());
+    FigureType$LeftTurn_instance = new FigureType('LeftTurn', 4, Color$RED_getInstance());
+    FigureType$Inverse_instance = new FigureType('Inverse', 5, Color$BLUE_getInstance());
+    FigureType$Outverse_instance = new FigureType('Outverse', 6, Color$ORANGE_getInstance());
   }
-  var Figure$Line_instance;
-  function Figure$Line_getInstance() {
-    Figure_initFields();
-    return Figure$Line_instance;
+  var FigureType$Line_instance;
+  function FigureType$Line_getInstance() {
+    FigureType_initFields();
+    return FigureType$Line_instance;
   }
-  var Figure$Box_instance;
-  function Figure$Box_getInstance() {
-    Figure_initFields();
-    return Figure$Box_instance;
+  var FigureType$Box_instance;
+  function FigureType$Box_getInstance() {
+    FigureType_initFields();
+    return FigureType$Box_instance;
   }
-  var Figure$Megenta_instance;
-  function Figure$Megenta_getInstance() {
-    Figure_initFields();
-    return Figure$Megenta_instance;
+  var FigureType$Megenta_instance;
+  function FigureType$Megenta_getInstance() {
+    FigureType_initFields();
+    return FigureType$Megenta_instance;
   }
-  var Figure$RightTurn_instance;
-  function Figure$RightTurn_getInstance() {
-    Figure_initFields();
-    return Figure$RightTurn_instance;
+  var FigureType$RightTurn_instance;
+  function FigureType$RightTurn_getInstance() {
+    FigureType_initFields();
+    return FigureType$RightTurn_instance;
   }
-  var Figure$LeftTurn_instance;
-  function Figure$LeftTurn_getInstance() {
-    Figure_initFields();
-    return Figure$LeftTurn_instance;
+  var FigureType$LeftTurn_instance;
+  function FigureType$LeftTurn_getInstance() {
+    FigureType_initFields();
+    return FigureType$LeftTurn_instance;
   }
-  var Figure$Inverse_instance;
-  function Figure$Inverse_getInstance() {
-    Figure_initFields();
-    return Figure$Inverse_instance;
+  var FigureType$Inverse_instance;
+  function FigureType$Inverse_getInstance() {
+    FigureType_initFields();
+    return FigureType$Inverse_instance;
   }
-  var Figure$Outverse_instance;
-  function Figure$Outverse_getInstance() {
-    Figure_initFields();
-    return Figure$Outverse_instance;
+  var FigureType$Outverse_instance;
+  function FigureType$Outverse_getInstance() {
+    FigureType_initFields();
+    return FigureType$Outverse_instance;
   }
-  Figure.$metadata$ = {
+  FigureType.$metadata$ = {
     kind: Kotlin.Kind.CLASS,
-    simpleName: 'Figure',
+    simpleName: 'FigureType',
     interfaces: [Enum]
   };
-  function Figure$values() {
-    return [Figure$Line_getInstance(), Figure$Box_getInstance(), Figure$Megenta_getInstance(), Figure$RightTurn_getInstance(), Figure$LeftTurn_getInstance(), Figure$Inverse_getInstance(), Figure$Outverse_getInstance()];
+  function FigureType$values() {
+    return [FigureType$Line_getInstance(), FigureType$Box_getInstance(), FigureType$Megenta_getInstance(), FigureType$RightTurn_getInstance(), FigureType$LeftTurn_getInstance(), FigureType$Inverse_getInstance(), FigureType$Outverse_getInstance()];
   }
-  Figure.values = Figure$values;
-  function Figure$valueOf(name) {
+  FigureType.values = FigureType$values;
+  function FigureType$valueOf(name) {
     switch (name) {
       case 'Line':
-        return Figure$Line_getInstance();
+        return FigureType$Line_getInstance();
       case 'Box':
-        return Figure$Box_getInstance();
+        return FigureType$Box_getInstance();
       case 'Megenta':
-        return Figure$Megenta_getInstance();
+        return FigureType$Megenta_getInstance();
       case 'RightTurn':
-        return Figure$RightTurn_getInstance();
+        return FigureType$RightTurn_getInstance();
       case 'LeftTurn':
-        return Figure$LeftTurn_getInstance();
+        return FigureType$LeftTurn_getInstance();
       case 'Inverse':
-        return Figure$Inverse_getInstance();
+        return FigureType$Inverse_getInstance();
       case 'Outverse':
-        return Figure$Outverse_getInstance();
-      default:Kotlin.throwISE('No enum constant com.tkachuko.tetris.model.Figure.' + name);
+        return FigureType$Outverse_getInstance();
+      default:Kotlin.throwISE('No enum constant com.tkachuko.tetris.model.FigureType.' + name);
     }
   }
-  Figure.valueOf_61zpoe$ = Figure$valueOf;
+  FigureType.valueOf_61zpoe$ = FigureType$valueOf;
   function Movement(name, ordinal, dx, dy) {
     if (dx === void 0)
       dx = Movement_init$lambda;
@@ -205,38 +205,47 @@
   function Movement_initFields() {
     Movement_initFields = function () {
     };
-    Movement$Down_instance = new Movement('Down', 0, void 0, Movement$Movement$Down_init$lambda);
-    Movement$Right_instance = new Movement('Right', 1, Movement$Movement$Right_init$lambda);
-    Movement$Left_instance = new Movement('Left', 2, Movement$Movement$Left_init$lambda);
+    Movement$Up_instance = new Movement('Up', 0, void 0, Movement$Movement$Up_init$lambda);
+    Movement$Down_instance = new Movement('Down', 1, void 0, Movement$Movement$Down_init$lambda);
+    Movement$Right_instance = new Movement('Right', 2, Movement$Movement$Right_init$lambda);
+    Movement$Left_instance = new Movement('Left', 3, Movement$Movement$Left_init$lambda);
   }
-  function Movement$Movement$Down_init$lambda(y, radius) {
-    return y + radius + 1 | 0;
+  function Movement$Movement$Up_init$lambda(y, radius, distance) {
+    return y - Kotlin.imul(distance, radius) | 0;
+  }
+  var Movement$Up_instance;
+  function Movement$Up_getInstance() {
+    Movement_initFields();
+    return Movement$Up_instance;
+  }
+  function Movement$Movement$Down_init$lambda(y, radius, distance) {
+    return y + Kotlin.imul(distance, radius) | 0;
   }
   var Movement$Down_instance;
   function Movement$Down_getInstance() {
     Movement_initFields();
     return Movement$Down_instance;
   }
-  function Movement$Movement$Right_init$lambda(x, radius) {
-    return x + radius + 1 | 0;
+  function Movement$Movement$Right_init$lambda(x, radius, distance) {
+    return x + Kotlin.imul(distance, radius) | 0;
   }
   var Movement$Right_instance;
   function Movement$Right_getInstance() {
     Movement_initFields();
     return Movement$Right_instance;
   }
-  function Movement$Movement$Left_init$lambda(x, radius) {
-    return x - radius - 1 | 0;
+  function Movement$Movement$Left_init$lambda(x, radius, distance) {
+    return x - Kotlin.imul(distance, radius) | 0;
   }
   var Movement$Left_instance;
   function Movement$Left_getInstance() {
     Movement_initFields();
     return Movement$Left_instance;
   }
-  function Movement_init$lambda(x, f) {
+  function Movement_init$lambda(x, f, f_0) {
     return x;
   }
-  function Movement_init$lambda_0(y, f) {
+  function Movement_init$lambda_0(y, f, f_0) {
     return y;
   }
   Movement.$metadata$ = {
@@ -245,11 +254,13 @@
     interfaces: [Enum]
   };
   function Movement$values() {
-    return [Movement$Down_getInstance(), Movement$Right_getInstance(), Movement$Left_getInstance()];
+    return [Movement$Up_getInstance(), Movement$Down_getInstance(), Movement$Right_getInstance(), Movement$Left_getInstance()];
   }
   Movement.values = Movement$values;
   function Movement$valueOf(name) {
     switch (name) {
+      case 'Up':
+        return Movement$Up_getInstance();
       case 'Down':
         return Movement$Down_getInstance();
       case 'Right':
@@ -269,7 +280,7 @@
       var tmp$_0;
       tmp$_0 = array_0.length - 1 | 0;
       for (var i_0 = 0; i_0 <= tmp$_0; i_0++) {
-        array_0[i_0] = new Cell(i_0, i);
+        array_0[i_0] = new Cell(i, i_0);
       }
       array[i] = array_0;
     }
@@ -283,6 +294,11 @@
   }
   function CellMovementOps() {
   }
+  CellMovementOps.prototype.move_w32byt$ = function (cell, mv, distance, callback$default) {
+    if (distance === void 0)
+      distance = 1;
+    return callback$default ? callback$default(cell, mv, distance) : this.move_w32byt$$default(cell, mv, distance);
+  };
   CellMovementOps.$metadata$ = {
     kind: Kotlin.Kind.INTERFACE,
     simpleName: 'CellMovementOps',
@@ -295,25 +311,25 @@
     simpleName: 'CellPaintingOps',
     interfaces: []
   };
-  function TetrisBoardMutationOps() {
+  function FocusFigureFactory() {
   }
-  TetrisBoardMutationOps.$metadata$ = {
+  FocusFigureFactory.$metadata$ = {
     kind: Kotlin.Kind.INTERFACE,
-    simpleName: 'TetrisBoardMutationOps',
+    simpleName: 'FocusFigureFactory',
     interfaces: []
   };
-  function TetrisBoardQueryOps() {
+  function TetrisBoardOps() {
   }
-  TetrisBoardQueryOps.$metadata$ = {
+  TetrisBoardOps.$metadata$ = {
     kind: Kotlin.Kind.INTERFACE,
-    simpleName: 'TetrisBoardQueryOps',
+    simpleName: 'TetrisBoardOps',
     interfaces: []
   };
   function CellMovement() {
     CellMovement_instance = this;
   }
-  CellMovement.prototype.move_oxxn89$ = function (cell, mv) {
-    return new Cell(mv.dx(cell.x, cell.size), mv.dy(cell.y, cell.size), cell.size, cell.color);
+  CellMovement.prototype.move_w32byt$$default = function (cell, mv, distance) {
+    return new Cell(mv.dx(cell.x, cell.size, distance), mv.dy(cell.y, cell.size, distance), cell.size, cell.color);
   };
   CellMovement.$metadata$ = {
     kind: Kotlin.Kind.OBJECT,
@@ -348,33 +364,131 @@
     }
     return CellPainting_instance;
   }
-  function TetrisBoardMutation() {
-    TetrisBoardMutation_instance = this;
+  function FigureCellsFactory(mv, cl) {
+    this.mv_0 = mv;
+    this.cl_0 = cl;
+    this.size_0 = 4;
   }
-  TetrisBoardMutation.prototype.draw_n17mh8$ = function (cell, board) {
-    if (board[cell.y][cell.x].isFull())
+  FigureCellsFactory.prototype.create_4iv74$ = function (figureType, leftMost) {
+    var tmp$;
+    if (Kotlin.equals(figureType, FigureType$Line_getInstance())) {
+      var size = this.size_0;
+      var array = Array(size);
+      var tmp$_0;
+      tmp$_0 = array.length - 1 | 0;
+      for (var i = 0; i <= tmp$_0; i++) {
+        array[i] = this.mv_0.move_w32byt$(leftMost, Movement$Right_getInstance(), i);
+      }
+      tmp$ = array;
+    }
+     else if (Kotlin.equals(figureType, FigureType$Box_getInstance())) {
+      var rightUp = this.mv_0.move_w32byt$(leftMost, Movement$Right_getInstance());
+      tmp$ = [leftMost, rightUp, this.mv_0.move_w32byt$(leftMost, Movement$Down_getInstance()), this.mv_0.move_w32byt$(rightUp, Movement$Down_getInstance())];
+    }
+     else if (Kotlin.equals(figureType, FigureType$Megenta_getInstance())) {
+      var rightBot = this.mv_0.move_w32byt$(leftMost, Movement$Right_getInstance());
+      tmp$ = [leftMost, rightBot, this.mv_0.move_w32byt$(rightBot, Movement$Up_getInstance()), this.mv_0.move_w32byt$(rightBot, Movement$Up_getInstance(), 2)];
+    }
+     else if (Kotlin.equals(figureType, FigureType$RightTurn_getInstance())) {
+      var rightBot_0 = this.mv_0.move_w32byt$(leftMost, Movement$Right_getInstance());
+      var middle = this.mv_0.move_w32byt$(rightBot_0, Movement$Up_getInstance());
+      tmp$ = [leftMost, rightBot_0, middle, this.mv_0.move_w32byt$(middle, Movement$Right_getInstance())];
+    }
+     else if (Kotlin.equals(figureType, FigureType$LeftTurn_getInstance())) {
+      var rightTop = this.mv_0.move_w32byt$(leftMost, Movement$Right_getInstance());
+      var middleBot = this.mv_0.move_w32byt$(rightTop, Movement$Down_getInstance());
+      tmp$ = [leftMost, rightTop, middleBot, this.mv_0.move_w32byt$(middleBot, Movement$Right_getInstance())];
+    }
+     else if (Kotlin.equals(figureType, FigureType$Inverse_getInstance())) {
+      var down = this.mv_0.move_w32byt$(leftMost, Movement$Down_getInstance());
+      tmp$ = [leftMost, down, this.mv_0.move_w32byt$(down, Movement$Right_getInstance()), this.mv_0.move_w32byt$(down, Movement$Right_getInstance(), 2)];
+    }
+     else if (Kotlin.equals(figureType, FigureType$Outverse_getInstance())) {
+      var last = this.mv_0.move_w32byt$(leftMost, Movement$Right_getInstance(), 2);
+      tmp$ = [leftMost, this.mv_0.move_w32byt$(leftMost, Movement$Right_getInstance()), last, this.mv_0.move_w32byt$(last, Movement$Up_getInstance(), 1)];
+    }
+     else
+      tmp$ = Kotlin.noWhenBranchMatched();
+    var cells = tmp$;
+    var destination = Kotlin.kotlin.collections.ArrayList_init_ww73n8$(cells.length);
+    var tmp$_1;
+    for (tmp$_1 = 0; tmp$_1 !== cells.length; ++tmp$_1) {
+      var item = cells[tmp$_1];
+      destination.add_11rb$(this.cl_0.paint_pfkznr$(item, figureType.color));
+    }
+    return Kotlin.kotlin.collections.copyToArray(destination);
+  };
+  FigureCellsFactory.$metadata$ = {
+    kind: Kotlin.Kind.CLASS,
+    simpleName: 'FigureCellsFactory',
+    interfaces: [FocusFigureFactory]
+  };
+  function Game(vertical, horizontal, factory, boardOps) {
+    this.vertical = vertical;
+    this.horizontal = horizontal;
+    this.factory_0 = factory;
+    this.boardOps_0 = boardOps;
+    this.board_0 = create(this.vertical, this.horizontal, []);
+  }
+  Game.prototype.play_d3we6c$ = function (current, next) {
+    if (this.boardOps_0.isFull_pow1mj$(this.board_0))
       return false;
-    else {
-      board[cell.y][cell.x] = cell;
-      return true;
+    else
+      return false;
+  };
+  Game.$metadata$ = {
+    kind: Kotlin.Kind.CLASS,
+    simpleName: 'Game',
+    interfaces: []
+  };
+  function TetrisBoardOperations(cellMove, cellPainting) {
+    this.cellMove_0 = cellMove;
+    this.cellPainting_0 = cellPainting;
+  }
+  TetrisBoardOperations.prototype.erase_nq6j51$ = function (board, cells) {
+    var tmp$;
+    for (tmp$ = 0; tmp$ !== cells.length; ++tmp$) {
+      var element = cells[tmp$];
+      board[element.y][element.x] = this.cellPainting_0.erase_p34xtx$(element);
     }
   };
-  TetrisBoardMutation.$metadata$ = {
-    kind: Kotlin.Kind.OBJECT,
-    simpleName: 'TetrisBoardMutation',
-    interfaces: [TetrisBoardMutationOps]
-  };
-  var TetrisBoardMutation_instance = null;
-  function TetrisBoardMutation_getInstance() {
-    if (TetrisBoardMutation_instance === null) {
-      new TetrisBoardMutation();
+  TetrisBoardOperations.prototype.draw_nq6j51$ = function (board, cells) {
+    var tmp$;
+    for (tmp$ = 0; tmp$ !== cells.length; ++tmp$) {
+      var element = cells[tmp$];
+      board[element.y][element.x] = element;
     }
-    return TetrisBoardMutation_instance;
-  }
-  function TetrisBoardQuery() {
-    TetrisBoardQuery_instance = this;
-  }
-  TetrisBoardQuery.prototype.isFull_pow1mj$ = function (board) {
+  };
+  TetrisBoardOperations.prototype.move_brxvj8$ = function (focusFigure, movement, board) {
+    var destination = Kotlin.kotlin.collections.ArrayList_init_ww73n8$(focusFigure.length);
+    var tmp$;
+    for (tmp$ = 0; tmp$ !== focusFigure.length; ++tmp$) {
+      var item = focusFigure[tmp$];
+      destination.add_11rb$(this.cellMove_0.move_w32byt$(item, movement));
+    }
+    var moved = Kotlin.kotlin.collections.copyToArray(destination);
+    var all$result;
+    all$break: do {
+      var tmp$_0;
+      for (tmp$_0 = 0; tmp$_0 !== moved.length; ++tmp$_0) {
+        var element = moved[tmp$_0];
+        if (!board[element.y][element.x].isEmpty()) {
+          all$result = false;
+          break all$break;
+        }
+      }
+      all$result = true;
+    }
+     while (false);
+    var canMove = all$result;
+    if (canMove) {
+      this.erase_nq6j51$(board, focusFigure.slice());
+      this.draw_nq6j51$(board, moved.slice());
+      return moved;
+    }
+    return [];
+  };
+  TetrisBoardOperations.prototype.isFull_pow1mj$ = function (board) {
     var all$result;
     all$break: do {
       var tmp$;
@@ -403,18 +517,18 @@
      while (false);
     return all$result;
   };
-  TetrisBoardQuery.$metadata$ = {
-    kind: Kotlin.Kind.OBJECT,
-    simpleName: 'TetrisBoardQuery',
-    interfaces: [TetrisBoardQueryOps]
+  TetrisBoardOperations.$metadata$ = {
+    kind: Kotlin.Kind.CLASS,
+    simpleName: 'TetrisBoardOperations',
+    interfaces: [TetrisBoardOps]
   };
-  var TetrisBoardQuery_instance = null;
-  function TetrisBoardQuery_getInstance() {
-    if (TetrisBoardQuery_instance === null) {
-      new TetrisBoardQuery();
-    }
-    return TetrisBoardQuery_instance;
+  function PaneRendering() {
   }
+  PaneRendering.$metadata$ = {
+    kind: Kotlin.Kind.INTERFACE,
+    simpleName: 'PaneRendering',
+    interfaces: []
+  };
   function main(args) {
     console.log('This shit works');
   }
@@ -445,28 +559,31 @@
     get: Color$EMPTY_getInstance
   });
   package$model.Color = Color;
-  Object.defineProperty(Figure, 'Line', {
-    get: Figure$Line_getInstance
+  Object.defineProperty(FigureType, 'Line', {
+    get: FigureType$Line_getInstance
   });
-  Object.defineProperty(Figure, 'Box', {
-    get: Figure$Box_getInstance
+  Object.defineProperty(FigureType, 'Box', {
+    get: FigureType$Box_getInstance
   });
-  Object.defineProperty(Figure, 'Megenta', {
-    get: Figure$Megenta_getInstance
+  Object.defineProperty(FigureType, 'Megenta', {
+    get: FigureType$Megenta_getInstance
   });
-  Object.defineProperty(Figure, 'RightTurn', {
-    get: Figure$RightTurn_getInstance
+  Object.defineProperty(FigureType, 'RightTurn', {
+    get: FigureType$RightTurn_getInstance
   });
-  Object.defineProperty(Figure, 'LeftTurn', {
-    get: Figure$LeftTurn_getInstance
+  Object.defineProperty(FigureType, 'LeftTurn', {
+    get: FigureType$LeftTurn_getInstance
   });
-  Object.defineProperty(Figure, 'Inverse', {
-    get: Figure$Inverse_getInstance
+  Object.defineProperty(FigureType, 'Inverse', {
+    get: FigureType$Inverse_getInstance
   });
-  Object.defineProperty(Figure, 'Outverse', {
-    get: Figure$Outverse_getInstance
+  Object.defineProperty(FigureType, 'Outverse', {
+    get: FigureType$Outverse_getInstance
   });
-  package$model.Figure = Figure;
+  package$model.FigureType = FigureType;
+  Object.defineProperty(Movement, 'Up', {
+    get: Movement$Up_getInstance
+  });
   Object.defineProperty(Movement, 'Down', {
     get: Movement$Down_getInstance
   });
@@ -482,8 +599,8 @@
   var package$def = package$ops.def || (package$ops.def = {});
   package$def.CellMovementOps = CellMovementOps;
   package$def.CellPaintingOps = CellPaintingOps;
-  package$def.TetrisBoardMutationOps = TetrisBoardMutationOps;
-  package$def.TetrisBoardQueryOps = TetrisBoardQueryOps;
+  package$def.FocusFigureFactory = FocusFigureFactory;
+  package$def.TetrisBoardOps = TetrisBoardOps;
   var package$impl = package$ops.impl || (package$ops.impl = {});
   Object.defineProperty(package$impl, 'CellMovement', {
     get: CellMovement_getInstance
@@ -491,13 +608,13 @@
   Object.defineProperty(package$impl, 'CellPainting', {
     get: CellPainting_getInstance
   });
-  Object.defineProperty(package$impl, 'TetrisBoardMutation', {
-    get: TetrisBoardMutation_getInstance
-  });
-  Object.defineProperty(package$impl, 'TetrisBoardQuery', {
-    get: TetrisBoardQuery_getInstance
-  });
+  package$impl.FigureCellsFactory = FigureCellsFactory;
+  package$impl.Game = Game;
+  package$impl.TetrisBoardOperations = TetrisBoardOperations;
+  var package$render = package$tetris.render || (package$tetris.render = {});
+  package$render.PaneRendering = PaneRendering;
   _.main_kand9s$ = main;
+  CellMovement.prototype.move_w32byt$ = CellMovementOps.prototype.move_w32byt$;
   main([]);
   Kotlin.defineModule('kotlin-tetris_main', _);
   return _;

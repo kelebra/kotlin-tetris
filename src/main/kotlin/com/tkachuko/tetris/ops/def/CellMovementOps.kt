@@ -5,5 +5,5 @@ import com.tkachuko.tetris.model.Movement
 
 interface CellMovementOps {
 
-    fun move(cell: Cell, mv: Movement): Cell
+    fun move(cell: Cell, mv: Movement, distance: Int = 1): Cell
 }

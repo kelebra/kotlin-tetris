@@ -2,7 +2,7 @@ package com.tkachuko.tetris.model
 
 import com.tkachuko.tetris.model.Color.*
 
-enum class Figure(val color: Color) {
+enum class FigureType(val color: Color) {
 
     Line(color = BLUE),
 

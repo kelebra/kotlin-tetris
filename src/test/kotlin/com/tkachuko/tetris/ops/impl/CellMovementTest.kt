@@ -37,4 +37,13 @@ class CellMovementTest {
         assertEquals(cell.y, moved.y)
         assertEquals(cell.color, moved.color)
     }
+
+    @Test
+    fun returnsTheSameIfDistanceZero() {
+        val cell = Cell(1, 1)
+        val moved = CellMovement.move(cell, Movement.Right, 0)
+
+        assertEquals(cell.y, moved.y)
+        assertEquals(cell.x, moved.x)
+    }
 }
