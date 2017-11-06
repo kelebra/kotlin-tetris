@@ -13,11 +13,11 @@ class FigureCellsFactoryTest {
     fun shouldCreateBox() {
         val type = FigureType.Box
 
-        val factory = FigureCellsFactory(CellMovement, CellPainting)
-        val cells = factory.create(type, Cell(0, 0))
+        val factory = FigureCellsFactory
+        val figure = factory.create(type, Cell(0, 0))
 
-        assertTrue { cells.all { it.color == type.color } }
-        val coordinates = cells.flatMap { listOf(it.y, it.x) }
+        assertTrue { figure.cells.all { it.color == type.color } }
+        val coordinates = figure.cells.flatMap { listOf(it.y, it.x) }
         assertEquals(listOf(0, 0, 0, 1, 1, 0, 1, 1), coordinates)
     }
 }

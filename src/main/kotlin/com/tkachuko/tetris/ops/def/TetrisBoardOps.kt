@@ -11,7 +11,7 @@ interface TetrisBoardOps {
 
     fun draw(board: TetrisBoard, vararg cells: Cell)
 
-    fun move(focusFigure: FocusFigure, movement: Movement, board: TetrisBoard): FocusFigure
+    fun move(figure: FocusFigure, movement: Movement, board: TetrisBoard): FocusFigure
 
     fun isFull(board: TetrisBoard): Boolean
 }

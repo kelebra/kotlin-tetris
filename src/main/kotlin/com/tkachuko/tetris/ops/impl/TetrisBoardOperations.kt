@@ -4,32 +4,29 @@ import com.tkachuko.tetris.model.Cell
 import com.tkachuko.tetris.model.FocusFigure
 import com.tkachuko.tetris.model.Movement
 import com.tkachuko.tetris.model.TetrisBoard
-import com.tkachuko.tetris.ops.def.CellMovementOps
-import com.tkachuko.tetris.ops.def.CellPaintingOps
 import com.tkachuko.tetris.ops.def.TetrisBoardOps
 
-class TetrisBoardOperations(private val cellMove: CellMovementOps,
-                            private val cellPainting: CellPaintingOps) : TetrisBoardOps {
+object TetrisBoardOperations : TetrisBoardOps {
 
     override fun erase(board: TetrisBoard, vararg cells: Cell) {
-        cells.forEach { board[it.y][it.x] = cellPainting.erase(it) }
+        cells.forEach { board[it.y][it.x] = it.erased() }
     }
 
     override fun draw(board: TetrisBoard, vararg cells: Cell) {
         cells.forEach { board[it.y][it.x] = it }
     }
 
-    override fun move(focusFigure: FocusFigure,
+    override fun move(figure: FocusFigure,
                       movement: Movement,
                       board: TetrisBoard): FocusFigure {
-        val moved = focusFigure.map { cellMove.move(it, movement) }.toTypedArray()
+        val moved = figure.cells.map { it.move(movement) }.toTypedArray()
         val canMove = moved.all { board[it.y][it.x].isEmpty() }
         if (canMove) {
-            erase(board, *focusFigure)
+            erase(board, *figure.cells)
             draw(board, *moved)
-            return moved
+            return FocusFigure(figure.type, figure.center.move(movement), moved)
         }
-        return arrayOf()
+        return figure
     }
 
     override fun isFull(board: TetrisBoard): Boolean {

@@ -1,19 +1,18 @@
 package com.tkachuko.tetris.model
 
-typealias Radius = Int
 typealias Coordinate = Int
 typealias Distance = Int
 
-typealias Move = (Coordinate, Radius, Distance) -> Int
+typealias Move = (Coordinate, Distance) -> Int
 
-enum class Movement(val dx: Move = { x, _, _ -> x },
-                    val dy: Move = { y, _, _ -> y }) {
+enum class Movement(val dx: Move = { x, _ -> x },
+                    val dy: Move = { y, _ -> y }) {
 
-    Up(dy = { y, radius, distance -> y - distance * radius }),
+    Up(dy = { y, distance -> y - distance }),
 
-    Down(dy = { y, radius, distance -> y + distance * radius }),
+    Down(dy = { y, distance -> y + distance }),
 
-    Right(dx = { x, radius, distance -> x + distance * radius }),
+    Right(dx = { x, distance -> x + distance }),
 
-    Left(dx = { x, radius, distance -> x - distance * radius })
+    Left(dx = { x, distance -> x - distance })
 }

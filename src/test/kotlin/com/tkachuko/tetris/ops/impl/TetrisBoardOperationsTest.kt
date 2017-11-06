@@ -9,8 +9,8 @@ import kotlin.test.assertTrue
 @Suppress("unused")
 class TetrisBoardOperationsTest {
 
-    private val ops = TetrisBoardOperations(CellMovement, CellPainting)
-    private val factory = FigureCellsFactory(CellMovement, CellPainting)
+    private val ops = TetrisBoardOperations
+    private val factory = FigureCellsFactory
 
     @Test
     fun boardIsFullWhenAllRowsHaveNonEmptyCell() {
@@ -34,13 +34,13 @@ class TetrisBoardOperationsTest {
 
     @Test
     fun shouldMoveLineDown() {
-        val line = factory.create(FigureType.Line, Cell(0, 0))
-        val board = create(4, 4, *line)
+        val line = factory.create(FigureType.Line, Cell(2, 0))
+        val board = create(4, 4, *line.cells)
 
         val movedLine = ops.move(line, Movement.Down, board)
 
         assertNotEquals(line, movedLine)
         assertTrue { board[0].all { it.isEmpty() } }
-        assertTrue { board[1].all { it.color == FigureType.Line.color } }
+        assertTrue { board[1].all { it.isFull() } }
     }
 }
