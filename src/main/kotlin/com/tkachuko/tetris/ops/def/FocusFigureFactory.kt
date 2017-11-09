@@ -20,11 +20,7 @@ interface FocusFigureFactory {
             Inverse   -> createInverse(center)
             Outverse  -> createOutverse(center)
         }
-        return FocusFigure(
-                type = figureType,
-                center = center.ofColor(color),
-                cells = cells.map { it.ofColor(color) }.toTypedArray()
-        )
+        return FocusFigure(figureType, center.ofColor(color), cells.map { it.ofColor(color) }.toTypedArray())
     }
 
     fun createLine(center: Center): Array<Cell>

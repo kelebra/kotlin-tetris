@@ -2,20 +2,23 @@
 (function (_, Kotlin) {
   'use strict';
   var Enum = Kotlin.kotlin.Enum;
+  var get_js = Kotlin.kotlin.js.get_js_1yb8b7$;
+  var contentEquals = Kotlin.arrayEquals;
+  var contentDeepHashCode = Kotlin.arrayDeepHashCode;
+  var contentDeepToString = Kotlin.arrayDeepToString;
+  var IllegalArgumentException = Kotlin.kotlin.IllegalArgumentException;
+  var contains = Kotlin.kotlin.collections.contains_mjy6jw$;
   Color.prototype = Object.create(Enum.prototype);
   Color.prototype.constructor = Color;
   FigureType.prototype = Object.create(Enum.prototype);
   FigureType.prototype.constructor = FigureType;
   Movement.prototype = Object.create(Enum.prototype);
   Movement.prototype.constructor = Movement;
-  function Cell(x, y, size, color) {
-    if (size === void 0)
-      size = 1;
+  function Cell(x, y, color) {
     if (color === void 0)
       color = Color$EMPTY_getInstance();
     this.x = x;
     this.y = y;
-    this.size = size;
     this.color = color;
   }
   Cell.prototype.isEmpty = function () {
@@ -24,10 +27,51 @@
   Cell.prototype.isFull = function () {
     return !this.isEmpty();
   };
+  Cell.prototype.ofColor_3mt2xs$ = function (color) {
+    return new Cell(this.x, this.y, color);
+  };
+  Cell.prototype.erased = function () {
+    return this.ofColor_3mt2xs$(Color$EMPTY_getInstance());
+  };
+  Cell.prototype.move_bq5dmk$ = function (mv, distance) {
+    if (distance === void 0)
+      distance = 1;
+    return new Cell(mv.dx(this.x, distance), mv.dy(this.y, distance), this.color);
+  };
+  Cell.prototype.rotateAround_p34xtx$ = function (center) {
+    var horizontal = center.x - this.x | 0;
+    var vertical = center.y - this.y | 0;
+    return new Cell(center.x + vertical | 0, center.y - horizontal | 0, this.color);
+  };
   Cell.$metadata$ = {
     kind: Kotlin.Kind.CLASS,
     simpleName: 'Cell',
     interfaces: []
+  };
+  Cell.prototype.component1 = function () {
+    return this.x;
+  };
+  Cell.prototype.component2 = function () {
+    return this.y;
+  };
+  Cell.prototype.component3 = function () {
+    return this.color;
+  };
+  Cell.prototype.copy_bs4d7k$ = function (x, y, color) {
+    return new Cell(x === void 0 ? this.x : x, y === void 0 ? this.y : y, color === void 0 ? this.color : color);
+  };
+  Cell.prototype.toString = function () {
+    return 'Cell(x=' + Kotlin.toString(this.x) + (', y=' + Kotlin.toString(this.y)) + (', color=' + Kotlin.toString(this.color)) + ')';
+  };
+  Cell.prototype.hashCode = function () {
+    var result = 0;
+    result = result * 31 + Kotlin.hashCode(this.x) | 0;
+    result = result * 31 + Kotlin.hashCode(this.y) | 0;
+    result = result * 31 + Kotlin.hashCode(this.color) | 0;
+    return result;
+  };
+  Cell.prototype.equals = function (other) {
+    return this === other || (other !== null && (typeof other === 'object' && (Object.getPrototypeOf(this) === Object.getPrototypeOf(other) && (Kotlin.equals(this.x, other.x) && Kotlin.equals(this.y, other.y) && Kotlin.equals(this.color, other.color)))));
   };
   function Color(name, ordinal, hex) {
     Enum.call(this);
@@ -191,6 +235,84 @@
     }
   }
   FigureType.valueOf_61zpoe$ = FigureType$valueOf;
+  function FocusFigure(type, center, cells) {
+    this.type = type;
+    this.center = center;
+    this.cells = cells;
+    if (this.cells.length === 0)
+      throw new IllegalArgumentException('Figure is not empty');
+    var $receiver = this.cells;
+    var any$result;
+    any$break: do {
+      var tmp$;
+      for (tmp$ = 0; tmp$ !== $receiver.length; ++tmp$) {
+        var element = $receiver[tmp$];
+        if (element.color !== this.type.color) {
+          any$result = true;
+          break any$break;
+        }
+      }
+      any$result = false;
+    }
+     while (false);
+    if (any$result)
+      throw new IllegalArgumentException('Cells should all have the same color');
+    if (!contains(this.cells, this.center))
+      throw new IllegalArgumentException('Center should belong to cells');
+  }
+  FocusFigure.prototype.rotate = function () {
+    var tmp$ = this.type;
+    var tmp$_0 = this.center;
+    var $receiver = this.cells;
+    var destination = Kotlin.kotlin.collections.ArrayList_init_ww73n8$($receiver.length);
+    var tmp$_1;
+    for (tmp$_1 = 0; tmp$_1 !== $receiver.length; ++tmp$_1) {
+      var item = $receiver[tmp$_1];
+      destination.add_11rb$(item.rotateAround_p34xtx$(this.center));
+    }
+    return new FocusFigure(tmp$, tmp$_0, Kotlin.kotlin.collections.copyToArray(destination));
+  };
+  FocusFigure.prototype.equals = function (other) {
+    var tmp$, tmp$_0;
+    if (this === other)
+      return true;
+    if (other == null || !Kotlin.equals(get_js(Kotlin.getKClassFromExpression(this)), get_js(Kotlin.getKClassFromExpression(other))))
+      return false;
+    Kotlin.isType(tmp$ = other, FocusFigure) ? tmp$ : Kotlin.throwCCE();
+    if (this.type !== other.type)
+      return false;
+    if (!((tmp$_0 = this.center) != null ? tmp$_0.equals(other.center) : null))
+      return false;
+    if (!contentEquals(this.cells, other.cells))
+      return false;
+    return true;
+  };
+  FocusFigure.prototype.hashCode = function () {
+    var result = this.type.hashCode();
+    result = (31 * result | 0) + this.center.hashCode() | 0;
+    result = (31 * result | 0) + contentDeepHashCode(this.cells) | 0;
+    return result;
+  };
+  FocusFigure.prototype.toString = function () {
+    return 'FocusFigure(type=' + this.type + ', center=' + this.center + ', cells=' + contentDeepToString(this.cells) + ')';
+  };
+  FocusFigure.$metadata$ = {
+    kind: Kotlin.Kind.CLASS,
+    simpleName: 'FocusFigure',
+    interfaces: []
+  };
+  FocusFigure.prototype.component1 = function () {
+    return this.type;
+  };
+  FocusFigure.prototype.component2 = function () {
+    return this.center;
+  };
+  FocusFigure.prototype.component3 = function () {
+    return this.cells;
+  };
+  FocusFigure.prototype.copy_vdye6z$ = function (type, center, cells) {
+    return new FocusFigure(type === void 0 ? this.type : type, center === void 0 ? this.center : center, cells === void 0 ? this.cells : cells);
+  };
   function Movement(name, ordinal, dx, dy) {
     if (dx === void 0)
       dx = Movement_init$lambda;
@@ -210,42 +332,42 @@
     Movement$Right_instance = new Movement('Right', 2, Movement$Movement$Right_init$lambda);
     Movement$Left_instance = new Movement('Left', 3, Movement$Movement$Left_init$lambda);
   }
-  function Movement$Movement$Up_init$lambda(y, radius, distance) {
-    return y - Kotlin.imul(distance, radius) | 0;
+  function Movement$Movement$Up_init$lambda(y, distance) {
+    return y - distance | 0;
   }
   var Movement$Up_instance;
   function Movement$Up_getInstance() {
     Movement_initFields();
     return Movement$Up_instance;
   }
-  function Movement$Movement$Down_init$lambda(y, radius, distance) {
-    return y + Kotlin.imul(distance, radius) | 0;
+  function Movement$Movement$Down_init$lambda(y, distance) {
+    return y + distance | 0;
   }
   var Movement$Down_instance;
   function Movement$Down_getInstance() {
     Movement_initFields();
     return Movement$Down_instance;
   }
-  function Movement$Movement$Right_init$lambda(x, radius, distance) {
-    return x + Kotlin.imul(distance, radius) | 0;
+  function Movement$Movement$Right_init$lambda(x, distance) {
+    return x + distance | 0;
   }
   var Movement$Right_instance;
   function Movement$Right_getInstance() {
     Movement_initFields();
     return Movement$Right_instance;
   }
-  function Movement$Movement$Left_init$lambda(x, radius, distance) {
-    return x - Kotlin.imul(distance, radius) | 0;
+  function Movement$Movement$Left_init$lambda(x, distance) {
+    return x - distance | 0;
   }
   var Movement$Left_instance;
   function Movement$Left_getInstance() {
     Movement_initFields();
     return Movement$Left_instance;
   }
-  function Movement_init$lambda(x, f, f_0) {
+  function Movement_init$lambda(x, f) {
     return x;
   }
-  function Movement_init$lambda_0(y, f, f_0) {
+  function Movement_init$lambda_0(y, f) {
     return y;
   }
   Movement.$metadata$ = {
@@ -292,27 +414,37 @@
     }
     return array_1;
   }
-  function CellMovementOps() {
-  }
-  CellMovementOps.prototype.move_w32byt$ = function (cell, mv, distance, callback$default) {
-    if (distance === void 0)
-      distance = 1;
-    return callback$default ? callback$default(cell, mv, distance) : this.move_w32byt$$default(cell, mv, distance);
-  };
-  CellMovementOps.$metadata$ = {
-    kind: Kotlin.Kind.INTERFACE,
-    simpleName: 'CellMovementOps',
-    interfaces: []
-  };
-  function CellPaintingOps() {
-  }
-  CellPaintingOps.$metadata$ = {
-    kind: Kotlin.Kind.INTERFACE,
-    simpleName: 'CellPaintingOps',
-    interfaces: []
-  };
   function FocusFigureFactory() {
   }
+  FocusFigureFactory.prototype.create_4iv74$ = function (figureType, center) {
+    var tmp$;
+    var color = figureType.color;
+    if (Kotlin.equals(figureType, FigureType$Line_getInstance()))
+      tmp$ = this.createLine_p34xtx$(center);
+    else if (Kotlin.equals(figureType, FigureType$Box_getInstance()))
+      tmp$ = this.createBox_p34xtx$(center);
+    else if (Kotlin.equals(figureType, FigureType$Megenta_getInstance()))
+      tmp$ = this.createMegenta_p34xtx$(center);
+    else if (Kotlin.equals(figureType, FigureType$RightTurn_getInstance()))
+      tmp$ = this.createRightTurn_p34xtx$(center);
+    else if (Kotlin.equals(figureType, FigureType$LeftTurn_getInstance()))
+      tmp$ = this.createLeftTurn_p34xtx$(center);
+    else if (Kotlin.equals(figureType, FigureType$Inverse_getInstance()))
+      tmp$ = this.createInverse_p34xtx$(center);
+    else if (Kotlin.equals(figureType, FigureType$Outverse_getInstance()))
+      tmp$ = this.createOutverse_p34xtx$(center);
+    else
+      tmp$ = Kotlin.noWhenBranchMatched();
+    var cells = tmp$;
+    var tmp$_0 = center.ofColor_3mt2xs$(color);
+    var destination = Kotlin.kotlin.collections.ArrayList_init_ww73n8$(cells.length);
+    var tmp$_1;
+    for (tmp$_1 = 0; tmp$_1 !== cells.length; ++tmp$_1) {
+      var item = cells[tmp$_1];
+      destination.add_11rb$(item.ofColor_3mt2xs$(color));
+    }
+    return new FocusFigure(figureType, tmp$_0, Kotlin.kotlin.collections.copyToArray(destination));
+  };
   FocusFigureFactory.$metadata$ = {
     kind: Kotlin.Kind.INTERFACE,
     simpleName: 'FocusFigureFactory',
@@ -325,131 +457,69 @@
     simpleName: 'TetrisBoardOps',
     interfaces: []
   };
-  function CellMovement() {
-    CellMovement_instance = this;
+  function FigureCellsFactory() {
+    FigureCellsFactory_instance = this;
   }
-  CellMovement.prototype.move_w32byt$$default = function (cell, mv, distance) {
-    return new Cell(mv.dx(cell.x, cell.size, distance), mv.dy(cell.y, cell.size, distance), cell.size, cell.color);
+  FigureCellsFactory.prototype.createLine_p34xtx$ = function (center) {
+    var leftMost = center.move_bq5dmk$(Movement$Left_getInstance(), 2);
+    var left = center.move_bq5dmk$(Movement$Left_getInstance());
+    var right = center.move_bq5dmk$(Movement$Right_getInstance());
+    return [leftMost, left, center, right];
   };
-  CellMovement.$metadata$ = {
-    kind: Kotlin.Kind.OBJECT,
-    simpleName: 'CellMovement',
-    interfaces: [CellMovementOps]
+  FigureCellsFactory.prototype.createBox_p34xtx$ = function (center) {
+    var rightUp = center.move_bq5dmk$(Movement$Right_getInstance());
+    return [center, rightUp, center.move_bq5dmk$(Movement$Down_getInstance()), rightUp.move_bq5dmk$(Movement$Down_getInstance())];
   };
-  var CellMovement_instance = null;
-  function CellMovement_getInstance() {
-    if (CellMovement_instance === null) {
-      new CellMovement();
-    }
-    return CellMovement_instance;
-  }
-  function CellPainting() {
-    CellPainting_instance = this;
-  }
-  CellPainting.prototype.paint_pfkznr$ = function (cell, color) {
-    return new Cell(cell.x, cell.y, cell.size, color);
+  FigureCellsFactory.prototype.createMegenta_p34xtx$ = function (center) {
+    var up = center.move_bq5dmk$(Movement$Up_getInstance());
+    var left = center.move_bq5dmk$(Movement$Left_getInstance());
+    var right = center.move_bq5dmk$(Movement$Right_getInstance());
+    return [left, center, up, right];
   };
-  CellPainting.prototype.erase_p34xtx$ = function (cell) {
-    return new Cell(cell.x, cell.y);
+  FigureCellsFactory.prototype.createRightTurn_p34xtx$ = function (center) {
+    var up = center.move_bq5dmk$(Movement$Up_getInstance());
+    var left = center.move_bq5dmk$(Movement$Left_getInstance());
+    var right = up.move_bq5dmk$(Movement$Right_getInstance());
+    return [left, center, up, right];
   };
-  CellPainting.$metadata$ = {
-    kind: Kotlin.Kind.OBJECT,
-    simpleName: 'CellPainting',
-    interfaces: [CellPaintingOps]
+  FigureCellsFactory.prototype.createLeftTurn_p34xtx$ = function (center) {
+    var up = center.move_bq5dmk$(Movement$Up_getInstance());
+    var left = up.move_bq5dmk$(Movement$Left_getInstance());
+    var right = center.move_bq5dmk$(Movement$Right_getInstance());
+    return [left, up, center, right];
   };
-  var CellPainting_instance = null;
-  function CellPainting_getInstance() {
-    if (CellPainting_instance === null) {
-      new CellPainting();
-    }
-    return CellPainting_instance;
-  }
-  function FigureCellsFactory(mv, cl) {
-    this.mv_0 = mv;
-    this.cl_0 = cl;
-    this.size_0 = 4;
-  }
-  FigureCellsFactory.prototype.create_4iv74$ = function (figureType, leftMost) {
-    var tmp$;
-    if (Kotlin.equals(figureType, FigureType$Line_getInstance())) {
-      var size = this.size_0;
-      var array = Array(size);
-      var tmp$_0;
-      tmp$_0 = array.length - 1 | 0;
-      for (var i = 0; i <= tmp$_0; i++) {
-        array[i] = this.mv_0.move_w32byt$(leftMost, Movement$Right_getInstance(), i);
-      }
-      tmp$ = array;
-    }
-     else if (Kotlin.equals(figureType, FigureType$Box_getInstance())) {
-      var rightUp = this.mv_0.move_w32byt$(leftMost, Movement$Right_getInstance());
-      tmp$ = [leftMost, rightUp, this.mv_0.move_w32byt$(leftMost, Movement$Down_getInstance()), this.mv_0.move_w32byt$(rightUp, Movement$Down_getInstance())];
-    }
-     else if (Kotlin.equals(figureType, FigureType$Megenta_getInstance())) {
-      var rightBot = this.mv_0.move_w32byt$(leftMost, Movement$Right_getInstance());
-      tmp$ = [leftMost, rightBot, this.mv_0.move_w32byt$(rightBot, Movement$Up_getInstance()), this.mv_0.move_w32byt$(rightBot, Movement$Up_getInstance(), 2)];
-    }
-     else if (Kotlin.equals(figureType, FigureType$RightTurn_getInstance())) {
-      var rightBot_0 = this.mv_0.move_w32byt$(leftMost, Movement$Right_getInstance());
-      var middle = this.mv_0.move_w32byt$(rightBot_0, Movement$Up_getInstance());
-      tmp$ = [leftMost, rightBot_0, middle, this.mv_0.move_w32byt$(middle, Movement$Right_getInstance())];
-    }
-     else if (Kotlin.equals(figureType, FigureType$LeftTurn_getInstance())) {
-      var rightTop = this.mv_0.move_w32byt$(leftMost, Movement$Right_getInstance());
-      var middleBot = this.mv_0.move_w32byt$(rightTop, Movement$Down_getInstance());
-      tmp$ = [leftMost, rightTop, middleBot, this.mv_0.move_w32byt$(middleBot, Movement$Right_getInstance())];
-    }
-     else if (Kotlin.equals(figureType, FigureType$Inverse_getInstance())) {
-      var down = this.mv_0.move_w32byt$(leftMost, Movement$Down_getInstance());
-      tmp$ = [leftMost, down, this.mv_0.move_w32byt$(down, Movement$Right_getInstance()), this.mv_0.move_w32byt$(down, Movement$Right_getInstance(), 2)];
-    }
-     else if (Kotlin.equals(figureType, FigureType$Outverse_getInstance())) {
-      var last = this.mv_0.move_w32byt$(leftMost, Movement$Right_getInstance(), 2);
-      tmp$ = [leftMost, this.mv_0.move_w32byt$(leftMost, Movement$Right_getInstance()), last, this.mv_0.move_w32byt$(last, Movement$Up_getInstance(), 1)];
-    }
-     else
-      tmp$ = Kotlin.noWhenBranchMatched();
-    var cells = tmp$;
-    var destination = Kotlin.kotlin.collections.ArrayList_init_ww73n8$(cells.length);
-    var tmp$_1;
-    for (tmp$_1 = 0; tmp$_1 !== cells.length; ++tmp$_1) {
-      var item = cells[tmp$_1];
-      destination.add_11rb$(this.cl_0.paint_pfkznr$(item, figureType.color));
-    }
-    return Kotlin.kotlin.collections.copyToArray(destination);
+  FigureCellsFactory.prototype.createInverse_p34xtx$ = function (center) {
+    var left = center.move_bq5dmk$(Movement$Left_getInstance());
+    var right = center.move_bq5dmk$(Movement$Right_getInstance());
+    var up = left.move_bq5dmk$(Movement$Up_getInstance());
+    return [up, left, center, right];
+  };
+  FigureCellsFactory.prototype.createOutverse_p34xtx$ = function (center) {
+    var left = center.move_bq5dmk$(Movement$Left_getInstance());
+    var right = center.move_bq5dmk$(Movement$Right_getInstance());
+    var up = right.move_bq5dmk$(Movement$Up_getInstance());
+    return [left, center, right, up];
   };
   FigureCellsFactory.$metadata$ = {
-    kind: Kotlin.Kind.CLASS,
+    kind: Kotlin.Kind.OBJECT,
     simpleName: 'FigureCellsFactory',
     interfaces: [FocusFigureFactory]
   };
-  function Game(vertical, horizontal, factory, boardOps) {
-    this.vertical = vertical;
-    this.horizontal = horizontal;
-    this.factory_0 = factory;
-    this.boardOps_0 = boardOps;
-    this.board_0 = create(this.vertical, this.horizontal, []);
+  var FigureCellsFactory_instance = null;
+  function FigureCellsFactory_getInstance() {
+    if (FigureCellsFactory_instance === null) {
+      new FigureCellsFactory();
+    }
+    return FigureCellsFactory_instance;
   }
-  Game.prototype.play_d3we6c$ = function (current, next) {
-    if (this.boardOps_0.isFull_pow1mj$(this.board_0))
-      return false;
-    else
-      return false;
-  };
-  Game.$metadata$ = {
-    kind: Kotlin.Kind.CLASS,
-    simpleName: 'Game',
-    interfaces: []
-  };
-  function TetrisBoardOperations(cellMove, cellPainting) {
-    this.cellMove_0 = cellMove;
-    this.cellPainting_0 = cellPainting;
+  function TetrisBoardOperations() {
+    TetrisBoardOperations_instance = this;
   }
   TetrisBoardOperations.prototype.erase_nq6j51$ = function (board, cells) {
     var tmp$;
     for (tmp$ = 0; tmp$ !== cells.length; ++tmp$) {
       var element = cells[tmp$];
-      board[element.y][element.x] = this.cellPainting_0.erase_p34xtx$(element);
+      board[element.y][element.x] = element.erased();
     }
   };
   TetrisBoardOperations.prototype.draw_nq6j51$ = function (board, cells) {
@@ -459,12 +529,13 @@
       board[element.y][element.x] = element;
     }
   };
-  TetrisBoardOperations.prototype.move_brxvj8$ = function (focusFigure, movement, board) {
-    var destination = Kotlin.kotlin.collections.ArrayList_init_ww73n8$(focusFigure.length);
+  TetrisBoardOperations.prototype.move_dkgw8k$ = function (figure, movement, board) {
+    var $receiver = figure.cells;
+    var destination = Kotlin.kotlin.collections.ArrayList_init_ww73n8$($receiver.length);
     var tmp$;
-    for (tmp$ = 0; tmp$ !== focusFigure.length; ++tmp$) {
-      var item = focusFigure[tmp$];
-      destination.add_11rb$(this.cellMove_0.move_w32byt$(item, movement));
+    for (tmp$ = 0; tmp$ !== $receiver.length; ++tmp$) {
+      var item = $receiver[tmp$];
+      destination.add_11rb$(item.move_bq5dmk$(movement));
     }
     var moved = Kotlin.kotlin.collections.copyToArray(destination);
     var all$result;
@@ -482,11 +553,11 @@
      while (false);
     var canMove = all$result;
     if (canMove) {
-      this.erase_nq6j51$(board, focusFigure.slice());
+      this.erase_nq6j51$(board, figure.cells.slice());
       this.draw_nq6j51$(board, moved.slice());
-      return moved;
+      return new FocusFigure(figure.type, figure.center.move_bq5dmk$(movement), moved);
     }
-    return [];
+    return figure;
   };
   TetrisBoardOperations.prototype.isFull_pow1mj$ = function (board) {
     var all$result;
@@ -518,10 +589,17 @@
     return all$result;
   };
   TetrisBoardOperations.$metadata$ = {
-    kind: Kotlin.Kind.CLASS,
+    kind: Kotlin.Kind.OBJECT,
     simpleName: 'TetrisBoardOperations',
     interfaces: [TetrisBoardOps]
   };
+  var TetrisBoardOperations_instance = null;
+  function TetrisBoardOperations_getInstance() {
+    if (TetrisBoardOperations_instance === null) {
+      new TetrisBoardOperations();
+    }
+    return TetrisBoardOperations_instance;
+  }
   function PaneRendering() {
   }
   PaneRendering.$metadata$ = {
@@ -581,6 +659,7 @@
     get: FigureType$Outverse_getInstance
   });
   package$model.FigureType = FigureType;
+  package$model.FocusFigure = FocusFigure;
   Object.defineProperty(Movement, 'Up', {
     get: Movement$Up_getInstance
   });
@@ -597,24 +676,19 @@
   package$model.create_lb6mxg$ = create;
   var package$ops = package$tetris.ops || (package$tetris.ops = {});
   var package$def = package$ops.def || (package$ops.def = {});
-  package$def.CellMovementOps = CellMovementOps;
-  package$def.CellPaintingOps = CellPaintingOps;
   package$def.FocusFigureFactory = FocusFigureFactory;
   package$def.TetrisBoardOps = TetrisBoardOps;
   var package$impl = package$ops.impl || (package$ops.impl = {});
-  Object.defineProperty(package$impl, 'CellMovement', {
-    get: CellMovement_getInstance
+  Object.defineProperty(package$impl, 'FigureCellsFactory', {
+    get: FigureCellsFactory_getInstance
   });
-  Object.defineProperty(package$impl, 'CellPainting', {
-    get: CellPainting_getInstance
+  Object.defineProperty(package$impl, 'TetrisBoardOperations', {
+    get: TetrisBoardOperations_getInstance
   });
-  package$impl.FigureCellsFactory = FigureCellsFactory;
-  package$impl.Game = Game;
-  package$impl.TetrisBoardOperations = TetrisBoardOperations;
   var package$render = package$tetris.render || (package$tetris.render = {});
   package$render.PaneRendering = PaneRendering;
   _.main_kand9s$ = main;
-  CellMovement.prototype.move_w32byt$ = CellMovementOps.prototype.move_w32byt$;
+  FigureCellsFactory.prototype.create_4iv74$ = FocusFigureFactory.prototype.create_4iv74$;
   main([]);
   Kotlin.defineModule('kotlin-tetris_main', _);
   return _;

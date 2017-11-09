@@ -80,4 +80,15 @@ class CellTest {
         assertEquals(cell.y, moved.y)
         assertEquals(cell.x, moved.x)
     }
+
+    @Test
+    fun cellCanBeRotatedIfLeftOfCenter() {
+        val center = Cell(5, 5)
+        val cell = Cell(4, 5)
+
+        val result = cell.rotateAround(center)
+
+        assertEquals(5, result.x)
+        assertEquals(4, result.y)
+    }
 }
