@@ -10,7 +10,6 @@ import kotlin.test.assertTrue
 class TetrisBoardOperationsTest {
 
     private val ops = TetrisBoardOperations
-    private val factory = FigureCellsFactory
 
     @Test
     fun boardIsFullWhenAllRowsHaveNonEmptyCell() {
@@ -34,7 +33,7 @@ class TetrisBoardOperationsTest {
 
     @Test
     fun shouldMoveLineDown() {
-        val line = factory.create(FigureType.Line, Cell(2, 0))
+        val line = FocusFigure.create(FigureType.Line, Cell(2, 0))
         val board = create(4, 4, *line.cells)
 
         val movedLine = ops.move(line, Movement.Down, board)
