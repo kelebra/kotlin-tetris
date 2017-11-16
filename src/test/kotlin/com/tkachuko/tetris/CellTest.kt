@@ -1,5 +1,8 @@
-package com.tkachuko.tetris.model
+package com.tkachuko.tetris
 
+import com.tkachuko.tetris.Cell
+import com.tkachuko.tetris.Color
+import com.tkachuko.tetris.Movement
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse

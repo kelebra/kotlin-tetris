@@ -1,4 +1,4 @@
-package com.tkachuko.tetris.model
+package com.tkachuko.tetris
 
 import kotlin.test.Test
 import kotlin.test.assertEquals

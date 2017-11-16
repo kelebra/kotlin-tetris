@@ -1,4 +1,4 @@
-package com.tkachuko.tetris.model
+package com.tkachuko.tetris
 
 data class Cell(val x: Int, val y: Int, val color: Color = Color.EMPTY) {
 
@@ -6,16 +6,16 @@ data class Cell(val x: Int, val y: Int, val color: Color = Color.EMPTY) {
 
     fun isFull(): Boolean = !isEmpty()
 
-    fun ofColor(color: Color): Cell = Cell(x, y, color)
+    fun ofColor(color: Color): Cell = copy(color = color)
 
     fun erased(): Cell = ofColor(Color.EMPTY)
 
     fun move(mv: Movement, distance: Int = 1): Cell =
-            Cell(mv.dx(x, distance), mv.dy(y, distance), color)
+            copy(x = mv.dx(x, distance), y = mv.dy(y, distance))
 
     fun rotateAround(center: Cell): Cell {
         val horizontal = center.x - x
         val vertical = center.y - y
-        return Cell(center.x + vertical, center.y - horizontal, color)
+        return copy(x = center.x + vertical, y = center.y - horizontal)
     }
 }

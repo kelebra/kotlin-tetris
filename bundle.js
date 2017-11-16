@@ -2,12 +2,16 @@
 (function (_, Kotlin) {
   'use strict';
   var Enum = Kotlin.kotlin.Enum;
+  var flatten = Kotlin.kotlin.collections.flatten_yrqxlj$;
   var get_js = Kotlin.kotlin.js.get_js_1yb8b7$;
   var contentEquals = Kotlin.arrayEquals;
   var contentDeepHashCode = Kotlin.arrayDeepHashCode;
   var contentDeepToString = Kotlin.arrayDeepToString;
   var IllegalArgumentException = Kotlin.kotlin.IllegalArgumentException;
   var contains = Kotlin.kotlin.collections.contains_mjy6jw$;
+  var distinct = Kotlin.kotlin.collections.distinct_7wnvza$;
+  var joinToString = Kotlin.kotlin.collections.joinToString_cgipc5$;
+  var println = Kotlin.kotlin.io.println_s8jyv4$;
   Color.prototype = Object.create(Enum.prototype);
   Color.prototype.constructor = Color;
   FigureType.prototype = Object.create(Enum.prototype);
@@ -41,21 +45,21 @@
   Cell.prototype.isFull = function () {
     return !this.isEmpty();
   };
-  Cell.prototype.ofColor_3mt2xs$ = function (color) {
-    return new Cell(this.x, this.y, color);
+  Cell.prototype.ofColor_xcbcyt$ = function (color) {
+    return this.copy_4wo3ff$(void 0, void 0, color);
   };
   Cell.prototype.erased = function () {
-    return this.ofColor_3mt2xs$(Color$EMPTY_getInstance());
+    return this.ofColor_xcbcyt$(Color$EMPTY_getInstance());
   };
-  Cell.prototype.move_bq5dmk$ = function (mv, distance) {
+  Cell.prototype.move_ahv8jj$ = function (mv, distance) {
     if (distance === void 0)
       distance = 1;
-    return new Cell(mv.dx(this.x, distance), mv.dy(this.y, distance), this.color);
+    return this.copy_4wo3ff$(mv.dx(this.x, distance), mv.dy(this.y, distance));
   };
-  Cell.prototype.rotateAround_p34xtx$ = function (center) {
+  Cell.prototype.rotateAround_uv1uzk$ = function (center) {
     var horizontal = center.x - this.x | 0;
     var vertical = center.y - this.y | 0;
-    return new Cell(center.x + vertical | 0, center.y - horizontal | 0, this.color);
+    return this.copy_4wo3ff$(center.x + vertical | 0, center.y - horizontal | 0);
   };
   Cell.$metadata$ = {
     kind: Kotlin.Kind.CLASS,
@@ -71,7 +75,7 @@
   Cell.prototype.component3 = function () {
     return this.color;
   };
-  Cell.prototype.copy_bs4d7k$ = function (x, y, color) {
+  Cell.prototype.copy_4wo3ff$ = function (x, y, color) {
     return new Cell(x === void 0 ? this.x : x, y === void 0 ? this.y : y, color === void 0 ? this.color : color);
   };
   Cell.prototype.toString = function () {
@@ -98,11 +102,11 @@
     };
     Color$RED_instance = new Color('RED', 0, '#ffb3ba');
     Color$ORANGE_instance = new Color('ORANGE', 1, '#ffdfba');
-    Color$YELLOW_instance = new Color('YELLOW', 2, '#ffffba');
+    Color$YELLOW_instance = new Color('YELLOW', 2, '#f1f105');
     Color$GREEN_instance = new Color('GREEN', 3, '#baffc9');
     Color$BLUE_instance = new Color('BLUE', 4, '#bae1ff');
     Color$PURPLE_instance = new Color('PURPLE', 5, '#c9c9ff');
-    Color$EMPTY_instance = new Color('EMPTY', 6, '#ffffff');
+    Color$EMPTY_instance = new Color('EMPTY', 6, '-------');
   }
   var Color$RED_instance;
   function Color$RED_getInstance() {
@@ -139,6 +143,9 @@
     Color_initFields();
     return Color$EMPTY_instance;
   }
+  Color.prototype.toString = function () {
+    return this.hex;
+  };
   Color.$metadata$ = {
     kind: Kotlin.Kind.CLASS,
     simpleName: 'Color',
@@ -164,10 +171,38 @@
         return Color$PURPLE_getInstance();
       case 'EMPTY':
         return Color$EMPTY_getInstance();
-      default:Kotlin.throwISE('No enum constant com.tkachuko.tetris.model.Color.' + name);
+      default:Kotlin.throwISE('No enum constant com.tkachuko.tetris.Color.' + name);
     }
   }
   Color.valueOf_61zpoe$ = Color$valueOf;
+  function DrawingBoard(ctx, cellSize) {
+    this.ctx_0 = ctx;
+    this.cellSize_0 = cellSize;
+  }
+  DrawingBoard.prototype.render_hlbjrj$ = function (board) {
+    this.ctx_0.clearRect(0.0, 0.0, this.ctx_0.canvas.width, this.ctx_0.canvas.height);
+    var $receiver = flatten(board.data);
+    var destination = Kotlin.kotlin.collections.ArrayList_init_ww73n8$();
+    var tmp$;
+    tmp$ = $receiver.iterator();
+    while (tmp$.hasNext()) {
+      var element = tmp$.next();
+      if (element.isFull())
+        destination.add_11rb$(element);
+    }
+    var tmp$_0;
+    tmp$_0 = destination.iterator();
+    while (tmp$_0.hasNext()) {
+      var element_0 = tmp$_0.next();
+      this.ctx_0.fillStyle = element_0.color;
+      this.ctx_0.fillRect(element_0.x * this.cellSize_0, element_0.y * this.cellSize_0, this.cellSize_0, this.cellSize_0);
+    }
+  };
+  DrawingBoard.$metadata$ = {
+    kind: Kotlin.Kind.CLASS,
+    simpleName: 'DrawingBoard',
+    interfaces: []
+  };
   function FigureType(name, ordinal, color) {
     Enum.call(this);
     this.color = color;
@@ -189,10 +224,10 @@
     FigureType$Line_instance = this;
     FigureType.call(this, 'Line', 0, Color$BLUE_getInstance());
   }
-  FigureType$Line.prototype.structureAround_p34xtx$ = function (center) {
-    var leftMost = center.move_bq5dmk$(Movement$Left_getInstance(), 2);
-    var left = center.move_bq5dmk$(Movement$Left_getInstance());
-    var right = center.move_bq5dmk$(Movement$Right_getInstance());
+  FigureType$Line.prototype.structureAround_uv1uzk$ = function (center) {
+    var leftMost = center.move_ahv8jj$(Movement$Left_getInstance(), 2);
+    var left = center.move_ahv8jj$(Movement$Left_getInstance());
+    var right = center.move_ahv8jj$(Movement$Right_getInstance());
     return [leftMost, left, center, right];
   };
   FigureType$Line.$metadata$ = {
@@ -209,9 +244,9 @@
     FigureType$Box_instance = this;
     FigureType.call(this, 'Box', 1, Color$YELLOW_getInstance());
   }
-  FigureType$Box.prototype.structureAround_p34xtx$ = function (center) {
-    var rightUp = center.move_bq5dmk$(Movement$Right_getInstance());
-    return [center, rightUp, center.move_bq5dmk$(Movement$Down_getInstance()), rightUp.move_bq5dmk$(Movement$Down_getInstance())];
+  FigureType$Box.prototype.structureAround_uv1uzk$ = function (center) {
+    var rightUp = center.move_ahv8jj$(Movement$Right_getInstance());
+    return [center, rightUp, center.move_ahv8jj$(Movement$Down_getInstance()), rightUp.move_ahv8jj$(Movement$Down_getInstance())];
   };
   FigureType$Box.$metadata$ = {
     kind: Kotlin.Kind.CLASS,
@@ -227,10 +262,10 @@
     FigureType$Megenta_instance = this;
     FigureType.call(this, 'Megenta', 2, Color$PURPLE_getInstance());
   }
-  FigureType$Megenta.prototype.structureAround_p34xtx$ = function (center) {
-    var up = center.move_bq5dmk$(Movement$Up_getInstance());
-    var left = center.move_bq5dmk$(Movement$Left_getInstance());
-    var right = center.move_bq5dmk$(Movement$Right_getInstance());
+  FigureType$Megenta.prototype.structureAround_uv1uzk$ = function (center) {
+    var up = center.move_ahv8jj$(Movement$Up_getInstance());
+    var left = center.move_ahv8jj$(Movement$Left_getInstance());
+    var right = center.move_ahv8jj$(Movement$Right_getInstance());
     return [left, center, up, right];
   };
   FigureType$Megenta.$metadata$ = {
@@ -247,10 +282,10 @@
     FigureType$RightTurn_instance = this;
     FigureType.call(this, 'RightTurn', 3, Color$GREEN_getInstance());
   }
-  FigureType$RightTurn.prototype.structureAround_p34xtx$ = function (center) {
-    var up = center.move_bq5dmk$(Movement$Up_getInstance());
-    var left = center.move_bq5dmk$(Movement$Left_getInstance());
-    var right = up.move_bq5dmk$(Movement$Right_getInstance());
+  FigureType$RightTurn.prototype.structureAround_uv1uzk$ = function (center) {
+    var up = center.move_ahv8jj$(Movement$Up_getInstance());
+    var left = center.move_ahv8jj$(Movement$Left_getInstance());
+    var right = up.move_ahv8jj$(Movement$Right_getInstance());
     return [left, center, up, right];
   };
   FigureType$RightTurn.$metadata$ = {
@@ -267,10 +302,10 @@
     FigureType$LeftTurn_instance = this;
     FigureType.call(this, 'LeftTurn', 4, Color$RED_getInstance());
   }
-  FigureType$LeftTurn.prototype.structureAround_p34xtx$ = function (center) {
-    var up = center.move_bq5dmk$(Movement$Up_getInstance());
-    var left = up.move_bq5dmk$(Movement$Left_getInstance());
-    var right = center.move_bq5dmk$(Movement$Right_getInstance());
+  FigureType$LeftTurn.prototype.structureAround_uv1uzk$ = function (center) {
+    var up = center.move_ahv8jj$(Movement$Up_getInstance());
+    var left = up.move_ahv8jj$(Movement$Left_getInstance());
+    var right = center.move_ahv8jj$(Movement$Right_getInstance());
     return [left, up, center, right];
   };
   FigureType$LeftTurn.$metadata$ = {
@@ -287,10 +322,10 @@
     FigureType$Inverse_instance = this;
     FigureType.call(this, 'Inverse', 5, Color$BLUE_getInstance());
   }
-  FigureType$Inverse.prototype.structureAround_p34xtx$ = function (center) {
-    var left = center.move_bq5dmk$(Movement$Left_getInstance());
-    var right = center.move_bq5dmk$(Movement$Right_getInstance());
-    var up = left.move_bq5dmk$(Movement$Up_getInstance());
+  FigureType$Inverse.prototype.structureAround_uv1uzk$ = function (center) {
+    var left = center.move_ahv8jj$(Movement$Left_getInstance());
+    var right = center.move_ahv8jj$(Movement$Right_getInstance());
+    var up = left.move_ahv8jj$(Movement$Up_getInstance());
     return [up, left, center, right];
   };
   FigureType$Inverse.$metadata$ = {
@@ -307,10 +342,10 @@
     FigureType$Outverse_instance = this;
     FigureType.call(this, 'Outverse', 6, Color$ORANGE_getInstance());
   }
-  FigureType$Outverse.prototype.structureAround_p34xtx$ = function (center) {
-    var left = center.move_bq5dmk$(Movement$Left_getInstance());
-    var right = center.move_bq5dmk$(Movement$Right_getInstance());
-    var up = right.move_bq5dmk$(Movement$Up_getInstance());
+  FigureType$Outverse.prototype.structureAround_uv1uzk$ = function (center) {
+    var left = center.move_ahv8jj$(Movement$Left_getInstance());
+    var right = center.move_ahv8jj$(Movement$Right_getInstance());
+    var up = right.move_ahv8jj$(Movement$Up_getInstance());
     return [left, center, right, up];
   };
   FigureType$Outverse.$metadata$ = {
@@ -348,7 +383,7 @@
         return FigureType$Inverse_getInstance();
       case 'Outverse':
         return FigureType$Outverse_getInstance();
-      default:Kotlin.throwISE('No enum constant com.tkachuko.tetris.model.FigureType.' + name);
+      default:Kotlin.throwISE('No enum constant com.tkachuko.tetris.FigureType.' + name);
     }
   }
   FigureType.valueOf_61zpoe$ = FigureType$valueOf;
@@ -386,29 +421,29 @@
     var tmp$_1;
     for (tmp$_1 = 0; tmp$_1 !== $receiver.length; ++tmp$_1) {
       var item = $receiver[tmp$_1];
-      destination.add_11rb$(item.rotateAround_p34xtx$(this.center));
+      destination.add_11rb$(item.rotateAround_uv1uzk$(this.center));
     }
     return new FocusFigure(tmp$, tmp$_0, Kotlin.kotlin.collections.copyToArray(destination));
   };
   function FocusFigure$Companion() {
     FocusFigure$Companion_instance = this;
   }
-  FocusFigure$Companion.prototype.random_p34xtx$ = function (center) {
+  FocusFigure$Companion.prototype.random_uv1uzk$ = function (center) {
     var types = FigureType$values();
     var rnd = Math.random() * types.length;
-    return this.create_4iv74$(types[rnd | 0], center);
+    return this.create_jffjqo$(types[rnd | 0], center);
   };
-  FocusFigure$Companion.prototype.create_4iv74$ = function (figureType, center) {
+  FocusFigure$Companion.prototype.create_jffjqo$ = function (figureType, center) {
     var color = figureType.color;
-    var $receiver = figureType.structureAround_p34xtx$(center);
+    var $receiver = figureType.structureAround_uv1uzk$(center);
     var destination = Kotlin.kotlin.collections.ArrayList_init_ww73n8$($receiver.length);
     var tmp$;
     for (tmp$ = 0; tmp$ !== $receiver.length; ++tmp$) {
       var item = $receiver[tmp$];
-      destination.add_11rb$(item.ofColor_3mt2xs$(color));
+      destination.add_11rb$(item.ofColor_xcbcyt$(color));
     }
     var cells = destination;
-    return new FocusFigure(figureType, center.ofColor_3mt2xs$(color), Kotlin.kotlin.collections.copyToArray(cells));
+    return new FocusFigure(figureType, center.ofColor_xcbcyt$(color), Kotlin.kotlin.collections.copyToArray(cells));
   };
   FocusFigure$Companion.$metadata$ = {
     kind: Kotlin.Kind.OBJECT,
@@ -460,8 +495,32 @@
   FocusFigure.prototype.component3 = function () {
     return this.cells;
   };
-  FocusFigure.prototype.copy_vdye6z$ = function (type, center, cells) {
+  FocusFigure.prototype.copy_1afsmu$ = function (type, center, cells) {
     return new FocusFigure(type === void 0 ? this.type : type, center === void 0 ? this.center : center, cells === void 0 ? this.cells : cells);
+  };
+  function Game(drawing, board) {
+    this.drawing_0 = drawing;
+    this.board_0 = board;
+    this.focusFigure_0 = this.createNextFigure_0();
+  }
+  Game.prototype.gravityTick = function () {
+    var tmp$;
+    var nextFigure = this.board_0.move_7cqm11$(this.focusFigure_0, Movement$Down_getInstance());
+    var focusFigureCanNotMove = (tmp$ = this.focusFigure_0) != null ? tmp$.equals(nextFigure) : null;
+    this.focusFigure_0 = focusFigureCanNotMove ? this.createNextFigure_0() : nextFigure;
+    this.drawing_0.render_hlbjrj$(this.board_0);
+  };
+  Game.prototype.createNextFigure_0 = function () {
+    return FocusFigure$Companion_getInstance().random_uv1uzk$(this.board_0.middle());
+  };
+  Game.prototype.start = function () {
+    this.board_0.draw_rxtk0p$(this.focusFigure_0.cells.slice());
+    this.drawing_0.render_hlbjrj$(this.board_0);
+  };
+  Game.$metadata$ = {
+    kind: Kotlin.Kind.CLASS,
+    simpleName: 'Game',
+    interfaces: []
   };
   function Movement(name, ordinal, dx, dy) {
     if (dx === void 0)
@@ -539,11 +598,18 @@
         return Movement$Right_getInstance();
       case 'Left':
         return Movement$Left_getInstance();
-      default:Kotlin.throwISE('No enum constant com.tkachuko.tetris.model.Movement.' + name);
+      default:Kotlin.throwISE('No enum constant com.tkachuko.tetris.Movement.' + name);
     }
   }
   Movement.valueOf_61zpoe$ = Movement$valueOf;
-  function create(vertical, horizontal, cells) {
+  function TetrisBoard(data) {
+    TetrisBoard$Companion_getInstance();
+    this.data = data;
+  }
+  function TetrisBoard$Companion() {
+    TetrisBoard$Companion_instance = this;
+  }
+  TetrisBoard$Companion.prototype.create_y7vy3d$ = function (vertical, horizontal, cells) {
     var array = Array(vertical);
     var tmp$;
     tmp$ = array.length - 1 | 0;
@@ -562,68 +628,82 @@
       var element = cells[tmp$_1];
       array_1[element.y][element.x] = element;
     }
-    return array_1;
-  }
-  function TetrisBoardOps() {
-  }
-  TetrisBoardOps.$metadata$ = {
-    kind: Kotlin.Kind.INTERFACE,
-    simpleName: 'TetrisBoardOps',
+    return new TetrisBoard(array_1);
+  };
+  TetrisBoard$Companion.$metadata$ = {
+    kind: Kotlin.Kind.OBJECT,
+    simpleName: 'Companion',
     interfaces: []
   };
-  function TetrisBoardOperations() {
-    TetrisBoardOperations_instance = this;
+  var TetrisBoard$Companion_instance = null;
+  function TetrisBoard$Companion_getInstance() {
+    if (TetrisBoard$Companion_instance === null) {
+      new TetrisBoard$Companion();
+    }
+    return TetrisBoard$Companion_instance;
   }
-  TetrisBoardOperations.prototype.erase_nq6j51$ = function (board, cells) {
+  TetrisBoard.prototype.within_0 = function (cell) {
+    return cell.y < this.data.length && cell.y >= 0 && cell.x < this.data[0].length && cell.x >= 0;
+  };
+  TetrisBoard.prototype.erase_0 = function (cells) {
     var tmp$;
     for (tmp$ = 0; tmp$ !== cells.length; ++tmp$) {
       var element = cells[tmp$];
-      board[element.y][element.x] = element.erased();
+      this.data[element.y][element.x] = element.erased();
     }
   };
-  TetrisBoardOperations.prototype.draw_nq6j51$ = function (board, cells) {
+  TetrisBoard.prototype.draw_rxtk0p$ = function (cells) {
     var tmp$;
     for (tmp$ = 0; tmp$ !== cells.length; ++tmp$) {
       var element = cells[tmp$];
-      board[element.y][element.x] = element;
+      this.data[element.y][element.x] = element;
     }
   };
-  TetrisBoardOperations.prototype.move_dkgw8k$ = function (figure, movement, board) {
+  TetrisBoard.prototype.move_7cqm11$ = function (figure, movement) {
     var $receiver = figure.cells;
     var destination = Kotlin.kotlin.collections.ArrayList_init_ww73n8$($receiver.length);
     var tmp$;
     for (tmp$ = 0; tmp$ !== $receiver.length; ++tmp$) {
       var item = $receiver[tmp$];
-      destination.add_11rb$(item.move_bq5dmk$(movement));
+      destination.add_11rb$(item.move_ahv8jj$(movement));
     }
     var moved = Kotlin.kotlin.collections.copyToArray(destination);
-    var all$result;
-    all$break: do {
-      var tmp$_0;
-      for (tmp$_0 = 0; tmp$_0 !== moved.length; ++tmp$_0) {
-        var element = moved[tmp$_0];
-        if (!board[element.y][element.x].isEmpty()) {
-          all$result = false;
-          break all$break;
+    var destination_0 = Kotlin.kotlin.collections.ArrayList_init_ww73n8$();
+    var tmp$_0;
+    for (tmp$_0 = 0; tmp$_0 !== moved.length; ++tmp$_0) {
+      var element = moved[tmp$_0];
+      if (!contains(figure.cells, element))
+        destination_0.add_11rb$(element);
+    }
+    var tmp$result;
+    tmp$break: do {
+      var tmp$_1;
+      tmp$_1 = destination_0.iterator();
+      while (tmp$_1.hasNext()) {
+        var element_0 = tmp$_1.next();
+        if (!(this.within_0(element_0) && this.data[element_0.y][element_0.x].isEmpty())) {
+          tmp$result = false;
+          break tmp$break;
         }
       }
-      all$result = true;
+      tmp$result = true;
     }
      while (false);
-    var canMove = all$result;
+    var canMove = tmp$result;
     if (canMove) {
-      this.erase_nq6j51$(board, figure.cells.slice());
-      this.draw_nq6j51$(board, moved.slice());
-      return new FocusFigure(figure.type, figure.center.move_bq5dmk$(movement), moved);
+      this.erase_0(figure.cells.slice());
+      this.draw_rxtk0p$(moved.slice());
+      return new FocusFigure(figure.type, figure.center.move_ahv8jj$(movement), moved);
     }
     return figure;
   };
-  TetrisBoardOperations.prototype.isFull_pow1mj$ = function (board) {
+  TetrisBoard.prototype.isFull = function () {
+    var $receiver = this.data;
     var all$result;
     all$break: do {
       var tmp$;
-      for (tmp$ = 0; tmp$ !== board.length; ++tmp$) {
-        var element = board[tmp$];
+      for (tmp$ = 0; tmp$ !== $receiver.length; ++tmp$) {
+        var element = $receiver[tmp$];
         var any$result;
         any$break: do {
           var tmp$_0;
@@ -647,33 +727,113 @@
      while (false);
     return all$result;
   };
-  TetrisBoardOperations.$metadata$ = {
-    kind: Kotlin.Kind.OBJECT,
-    simpleName: 'TetrisBoardOperations',
-    interfaces: [TetrisBoardOps]
-  };
-  var TetrisBoardOperations_instance = null;
-  function TetrisBoardOperations_getInstance() {
-    if (TetrisBoardOperations_instance === null) {
-      new TetrisBoardOperations();
+  TetrisBoard.prototype.clearCompleteRows = function () {
+    var $receiver = this.data;
+    var destination = Kotlin.kotlin.collections.ArrayList_init_ww73n8$();
+    var tmp$;
+    for (tmp$ = 0; tmp$ !== $receiver.length; ++tmp$) {
+      var element = $receiver[tmp$];
+      var all$result;
+      all$break: do {
+        var tmp$_0;
+        for (tmp$_0 = 0; tmp$_0 !== element.length; ++tmp$_0) {
+          var element_0 = element[tmp$_0];
+          if (!element_0.isFull()) {
+            all$result = false;
+            break all$break;
+          }
+        }
+        all$result = true;
+      }
+       while (false);
+      if (all$result)
+        destination.add_11rb$(element);
     }
-    return TetrisBoardOperations_instance;
+    var $receiver_0 = flatten(Kotlin.kotlin.collections.copyToArray(destination));
+    var destination_0 = Kotlin.kotlin.collections.ArrayList_init_ww73n8$(Kotlin.kotlin.collections.collectionSizeOrDefault_ba2ldo$($receiver_0, 10));
+    var tmp$_1;
+    tmp$_1 = $receiver_0.iterator();
+    while (tmp$_1.hasNext()) {
+      var item = tmp$_1.next();
+      destination_0.add_11rb$(item.y);
+    }
+    var filledRows = distinct(destination_0);
+    var tmp$_2;
+    tmp$_2 = filledRows.iterator();
+    while (tmp$_2.hasNext()) {
+      var element_1 = tmp$_2.next();
+      this.erase_0(this.data[element_1].slice());
+    }
+    return filledRows.size;
+  };
+  TetrisBoard.prototype.middle = function () {
+    return new Cell(this.data[0].length / 2 | 0, 1);
+  };
+  function TetrisBoard$toString$lambda(it) {
+    var destination = Kotlin.kotlin.collections.ArrayList_init_ww73n8$(it.length);
+    var tmp$;
+    for (tmp$ = 0; tmp$ !== it.length; ++tmp$) {
+      var item = it[tmp$];
+      destination.add_11rb$(item.color);
+    }
+    return destination.toString();
   }
-  function PaneRendering() {
-  }
-  PaneRendering.$metadata$ = {
-    kind: Kotlin.Kind.INTERFACE,
-    simpleName: 'PaneRendering',
+  TetrisBoard.prototype.toString = function () {
+    return joinToString(this.data, '\n', void 0, void 0, void 0, void 0, TetrisBoard$toString$lambda);
+  };
+  TetrisBoard.$metadata$ = {
+    kind: Kotlin.Kind.CLASS,
+    simpleName: 'TetrisBoard',
     interfaces: []
   };
+  TetrisBoard.prototype.component1 = function () {
+    return this.data;
+  };
+  TetrisBoard.prototype.copy_1or6zk$ = function (data) {
+    return new TetrisBoard(data === void 0 ? this.data : data);
+  };
+  TetrisBoard.prototype.hashCode = function () {
+    var result = 0;
+    result = result * 31 + Kotlin.hashCode(this.data) | 0;
+    return result;
+  };
+  TetrisBoard.prototype.equals = function (other) {
+    return this === other || (other !== null && (typeof other === 'object' && (Object.getPrototypeOf(this) === Object.getPrototypeOf(other) && Kotlin.equals(this.data, other.data))));
+  };
+  function main$lambda$lambda(closure$game) {
+    return function () {
+      closure$game.gravityTick();
+    };
+  }
+  function main$lambda(closure$game, closure$gravityTimeout) {
+    return function (it) {
+      closure$game.start();
+      return window.setInterval(main$lambda$lambda(closure$game), closure$gravityTimeout);
+    };
+  }
   function main(args) {
-    console.log('This shit works');
+    var tmp$, tmp$_0;
+    try {
+      var gameCanvas = Kotlin.isType(tmp$ = document.getElementById('game'), HTMLCanvasElement) ? tmp$ : Kotlin.throwCCE();
+      var cellSize = 50;
+      var drawingBoard = new DrawingBoard(Kotlin.isType(tmp$_0 = gameCanvas.getContext('2d'), CanvasRenderingContext2D) ? tmp$_0 : Kotlin.throwCCE(), cellSize);
+      var board = TetrisBoard$Companion_getInstance().create_y7vy3d$(22, 10, []);
+      var game = new Game(drawingBoard, board);
+      gameCanvas.height = Kotlin.imul(board.data.length, cellSize);
+      gameCanvas.width = Kotlin.imul(board.data[0].length, cellSize);
+      var gravityTimeout = 500;
+      gameCanvas.onclick = main$lambda(game, gravityTimeout);
+      println('Init done');
+    }
+     catch (initError) {
+      println('There was init error, skipping...');
+      println(initError.toString());
+    }
   }
   var package$com = _.com || (_.com = {});
   var package$tkachuko = package$com.tkachuko || (package$com.tkachuko = {});
   var package$tetris = package$tkachuko.tetris || (package$tkachuko.tetris = {});
-  var package$model = package$tetris.model || (package$tetris.model = {});
-  package$model.Cell = Cell;
+  package$tetris.Cell = Cell;
   Object.defineProperty(Color, 'RED', {
     get: Color$RED_getInstance
   });
@@ -695,7 +855,8 @@
   Object.defineProperty(Color, 'EMPTY', {
     get: Color$EMPTY_getInstance
   });
-  package$model.Color = Color;
+  package$tetris.Color = Color;
+  package$tetris.DrawingBoard = DrawingBoard;
   Object.defineProperty(FigureType, 'Line', {
     get: FigureType$Line_getInstance
   });
@@ -717,11 +878,12 @@
   Object.defineProperty(FigureType, 'Outverse', {
     get: FigureType$Outverse_getInstance
   });
-  package$model.FigureType = FigureType;
+  package$tetris.FigureType = FigureType;
   Object.defineProperty(FocusFigure, 'Companion', {
     get: FocusFigure$Companion_getInstance
   });
-  package$model.FocusFigure = FocusFigure;
+  package$tetris.FocusFigure = FocusFigure;
+  package$tetris.Game = Game;
   Object.defineProperty(Movement, 'Up', {
     get: Movement$Up_getInstance
   });
@@ -734,17 +896,11 @@
   Object.defineProperty(Movement, 'Left', {
     get: Movement$Left_getInstance
   });
-  package$model.Movement = Movement;
-  package$model.create_lb6mxg$ = create;
-  var package$ops = package$tetris.ops || (package$tetris.ops = {});
-  var package$def = package$ops.def || (package$ops.def = {});
-  package$def.TetrisBoardOps = TetrisBoardOps;
-  var package$impl = package$ops.impl || (package$ops.impl = {});
-  Object.defineProperty(package$impl, 'TetrisBoardOperations', {
-    get: TetrisBoardOperations_getInstance
+  package$tetris.Movement = Movement;
+  Object.defineProperty(TetrisBoard, 'Companion', {
+    get: TetrisBoard$Companion_getInstance
   });
-  var package$render = package$tetris.render || (package$tetris.render = {});
-  package$render.PaneRendering = PaneRendering;
+  package$tetris.TetrisBoard = TetrisBoard;
   _.main_kand9s$ = main;
   main([]);
   Kotlin.defineModule('kotlin-tetris_main', _);

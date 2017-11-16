@@ -1,6 +1,6 @@
-package com.tkachuko.tetris.model
+package com.tkachuko.tetris
 
-import com.tkachuko.tetris.model.Color.*
+import com.tkachuko.tetris.Color.*
 
 enum class FigureType(val color: Color) {
 

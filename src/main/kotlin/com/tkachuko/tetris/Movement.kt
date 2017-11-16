@@ -1,4 +1,4 @@
-package com.tkachuko.tetris.model
+package com.tkachuko.tetris
 
 typealias Coordinate = Int
 typealias Distance = Int
