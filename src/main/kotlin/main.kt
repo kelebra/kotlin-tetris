@@ -1,6 +1,8 @@
 import com.tkachuko.tetris.DrawingBoard
 import com.tkachuko.tetris.Game
+import com.tkachuko.tetris.Movement
 import com.tkachuko.tetris.TetrisBoard
+import com.tkachuko.tetris.keyboard.KeyboardListener
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLCanvasElement
 import kotlin.browser.document
@@ -18,13 +20,15 @@ fun main(args: Array<String>) {
         val board = TetrisBoard.create(22, 10)
         val game = Game(drawingBoard, board)
 
+        KeyboardListener({ mv -> game.movementTick(mv, false) }).run()
+
         gameCanvas.height = board.data.size * cellSize
         gameCanvas.width = board.data[0].size * cellSize
 
         val gravityTimeout = 500
         gameCanvas.onclick = {
             game.start()
-            window.setInterval({ game.gravityTick() }, gravityTimeout)
+            window.setInterval({ game.movementTick(Movement.Down, true) }, gravityTimeout)
         }
 
         println("Init done")

@@ -503,11 +503,11 @@
     this.board_0 = board;
     this.focusFigure_0 = this.createNextFigure_0();
   }
-  Game.prototype.gravityTick = function () {
+  Game.prototype.movementTick_k2jd1i$ = function (movement, shouldChangeFigure) {
     var tmp$;
-    var nextFigure = this.board_0.move_7cqm11$(this.focusFigure_0, Movement$Down_getInstance());
-    var focusFigureCanNotMove = (tmp$ = this.focusFigure_0) != null ? tmp$.equals(nextFigure) : null;
-    this.focusFigure_0 = focusFigureCanNotMove ? this.createNextFigure_0() : nextFigure;
+    var nextFigure = this.board_0.move_7cqm11$(this.focusFigure_0, movement);
+    var focusFigureTheSame = (tmp$ = this.focusFigure_0) != null ? tmp$.equals(nextFigure) : null;
+    this.focusFigure_0 = focusFigureTheSame && shouldChangeFigure ? this.createNextFigure_0() : nextFigure;
     this.drawing_0.render_hlbjrj$(this.board_0);
   };
   Game.prototype.createNextFigure_0 = function () {
@@ -800,12 +800,40 @@
   TetrisBoard.prototype.equals = function (other) {
     return this === other || (other !== null && (typeof other === 'object' && (Object.getPrototypeOf(this) === Object.getPrototypeOf(other) && Kotlin.equals(this.data, other.data))));
   };
-  function main$lambda$lambda(closure$game) {
-    return function () {
-      closure$game.gravityTick();
+  function KeyboardListener(listener) {
+    this.listener_0 = listener;
+  }
+  function KeyboardListener$run$lambda(this$KeyboardListener) {
+    return function (event) {
+      var tmp$, tmp$_0;
+      tmp$_0 = (Kotlin.isType(tmp$ = event, KeyboardEvent) ? tmp$ : Kotlin.throwCCE()).keyCode;
+      if (tmp$_0 === 37)
+        this$KeyboardListener.listener_0(Movement$Left_getInstance());
+      else if (tmp$_0 === 39)
+        this$KeyboardListener.listener_0(Movement$Right_getInstance());
+      else if (tmp$_0 === 40)
+        this$KeyboardListener.listener_0(Movement$Down_getInstance());
     };
   }
-  function main$lambda(closure$game, closure$gravityTimeout) {
+  KeyboardListener.prototype.run = function () {
+    document.onkeydown = KeyboardListener$run$lambda(this);
+  };
+  KeyboardListener.$metadata$ = {
+    kind: Kotlin.Kind.CLASS,
+    simpleName: 'KeyboardListener',
+    interfaces: []
+  };
+  function main$lambda(closure$game) {
+    return function (mv) {
+      closure$game.movementTick_k2jd1i$(mv, false);
+    };
+  }
+  function main$lambda$lambda(closure$game) {
+    return function () {
+      closure$game.movementTick_k2jd1i$(Movement$Down_getInstance(), true);
+    };
+  }
+  function main$lambda_0(closure$game, closure$gravityTimeout) {
     return function (it) {
       closure$game.start();
       return window.setInterval(main$lambda$lambda(closure$game), closure$gravityTimeout);
@@ -819,10 +847,11 @@
       var drawingBoard = new DrawingBoard(Kotlin.isType(tmp$_0 = gameCanvas.getContext('2d'), CanvasRenderingContext2D) ? tmp$_0 : Kotlin.throwCCE(), cellSize);
       var board = TetrisBoard$Companion_getInstance().create_y7vy3d$(22, 10, []);
       var game = new Game(drawingBoard, board);
+      (new KeyboardListener(main$lambda(game))).run();
       gameCanvas.height = Kotlin.imul(board.data.length, cellSize);
       gameCanvas.width = Kotlin.imul(board.data[0].length, cellSize);
       var gravityTimeout = 500;
-      gameCanvas.onclick = main$lambda(game, gravityTimeout);
+      gameCanvas.onclick = main$lambda_0(game, gravityTimeout);
       println('Init done');
     }
      catch (initError) {
@@ -901,6 +930,8 @@
     get: TetrisBoard$Companion_getInstance
   });
   package$tetris.TetrisBoard = TetrisBoard;
+  var package$keyboard = package$tetris.keyboard || (package$tetris.keyboard = {});
+  package$keyboard.KeyboardListener = KeyboardListener;
   _.main_kand9s$ = main;
   main([]);
   Kotlin.defineModule('kotlin-tetris_main', _);

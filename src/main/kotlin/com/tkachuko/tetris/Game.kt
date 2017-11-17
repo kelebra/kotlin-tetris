@@ -1,17 +1,15 @@
 package com.tkachuko.tetris
 
-import com.tkachuko.tetris.Movement.Down
-
 class Game(private val drawing: DrawingBoard,
            private val board: TetrisBoard) {
 
     private var focusFigure = createNextFigure()
 
-    fun gravityTick() {
-        val nextFigure = board.move(focusFigure, Down)
-        val focusFigureCanNotMove = focusFigure == nextFigure
+    fun movementTick(movement: Movement, shouldChangeFigure: Boolean) {
+        val nextFigure = board.move(focusFigure, movement)
+        val focusFigureTheSame = focusFigure == nextFigure
 
-        focusFigure = if (focusFigureCanNotMove) createNextFigure() else nextFigure
+        focusFigure = if (focusFigureTheSame && shouldChangeFigure) createNextFigure() else nextFigure
 
         drawing.render(board)
     }
