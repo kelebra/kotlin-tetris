@@ -510,6 +510,11 @@
     this.focusFigure_0 = focusFigureTheSame && shouldChangeFigure ? this.createNextFigure_0() : nextFigure;
     this.drawing_0.render_hlbjrj$(this.board_0);
   };
+  Game.prototype.rotateFocusFigure = function () {
+    var nextFigure = this.board_0.rotate_enfezm$(this.focusFigure_0);
+    this.focusFigure_0 = nextFigure;
+    this.drawing_0.render_hlbjrj$(this.board_0);
+  };
   Game.prototype.createNextFigure_0 = function () {
     return FocusFigure$Companion_getInstance().random_uv1uzk$(this.board_0.middle());
   };
@@ -652,12 +657,52 @@
       this.data[element.y][element.x] = element.erased();
     }
   };
+  TetrisBoard.prototype.isValidMove_0 = function (previous, moved) {
+    var destination = Kotlin.kotlin.collections.ArrayList_init_ww73n8$();
+    var tmp$;
+    for (tmp$ = 0; tmp$ !== moved.length; ++tmp$) {
+      var element = moved[tmp$];
+      if (!contains(previous.cells, element))
+        destination.add_11rb$(element);
+    }
+    var tmp$result;
+    tmp$break: do {
+      var tmp$_0;
+      tmp$_0 = destination.iterator();
+      while (tmp$_0.hasNext()) {
+        var element_0 = tmp$_0.next();
+        if (!(this.within_0(element_0) && this.data[element_0.y][element_0.x].isEmpty())) {
+          tmp$result = false;
+          break tmp$break;
+        }
+      }
+      tmp$result = true;
+    }
+     while (false);
+    return tmp$result;
+  };
   TetrisBoard.prototype.draw_rxtk0p$ = function (cells) {
     var tmp$;
     for (tmp$ = 0; tmp$ !== cells.length; ++tmp$) {
       var element = cells[tmp$];
       this.data[element.y][element.x] = element;
     }
+  };
+  TetrisBoard.prototype.rotate_enfezm$ = function (figure) {
+    var $receiver = figure.cells;
+    var destination = Kotlin.kotlin.collections.ArrayList_init_ww73n8$($receiver.length);
+    var tmp$;
+    for (tmp$ = 0; tmp$ !== $receiver.length; ++tmp$) {
+      var item = $receiver[tmp$];
+      destination.add_11rb$(item.rotateAround_uv1uzk$(figure.center));
+    }
+    var rotated = Kotlin.kotlin.collections.copyToArray(destination);
+    if (this.isValidMove_0(figure, rotated.slice())) {
+      this.erase_0(figure.cells.slice());
+      this.draw_rxtk0p$(rotated.slice());
+      return figure.copy_1afsmu$(void 0, void 0, rotated);
+    }
+    return figure;
   };
   TetrisBoard.prototype.move_7cqm11$ = function (figure, movement) {
     var $receiver = figure.cells;
@@ -668,32 +713,10 @@
       destination.add_11rb$(item.move_ahv8jj$(movement));
     }
     var moved = Kotlin.kotlin.collections.copyToArray(destination);
-    var destination_0 = Kotlin.kotlin.collections.ArrayList_init_ww73n8$();
-    var tmp$_0;
-    for (tmp$_0 = 0; tmp$_0 !== moved.length; ++tmp$_0) {
-      var element = moved[tmp$_0];
-      if (!contains(figure.cells, element))
-        destination_0.add_11rb$(element);
-    }
-    var tmp$result;
-    tmp$break: do {
-      var tmp$_1;
-      tmp$_1 = destination_0.iterator();
-      while (tmp$_1.hasNext()) {
-        var element_0 = tmp$_1.next();
-        if (!(this.within_0(element_0) && this.data[element_0.y][element_0.x].isEmpty())) {
-          tmp$result = false;
-          break tmp$break;
-        }
-      }
-      tmp$result = true;
-    }
-     while (false);
-    var canMove = tmp$result;
-    if (canMove) {
+    if (this.isValidMove_0(figure, moved.slice())) {
       this.erase_0(figure.cells.slice());
       this.draw_rxtk0p$(moved.slice());
-      return new FocusFigure(figure.type, figure.center.move_ahv8jj$(movement), moved);
+      return figure.copy_1afsmu$(void 0, figure.center.move_ahv8jj$(movement), moved);
     }
     return figure;
   };
@@ -800,19 +823,22 @@
   TetrisBoard.prototype.equals = function (other) {
     return this === other || (other !== null && (typeof other === 'object' && (Object.getPrototypeOf(this) === Object.getPrototypeOf(other) && Kotlin.equals(this.data, other.data))));
   };
-  function KeyboardListener(listener) {
-    this.listener_0 = listener;
+  function KeyboardListener(movementListener, rotationListener) {
+    this.movementListener_0 = movementListener;
+    this.rotationListener_0 = rotationListener;
   }
   function KeyboardListener$run$lambda(this$KeyboardListener) {
     return function (event) {
       var tmp$, tmp$_0;
       tmp$_0 = (Kotlin.isType(tmp$ = event, KeyboardEvent) ? tmp$ : Kotlin.throwCCE()).keyCode;
       if (tmp$_0 === 37)
-        this$KeyboardListener.listener_0(Movement$Left_getInstance());
+        this$KeyboardListener.movementListener_0(Movement$Left_getInstance());
+      else if (tmp$_0 === 38)
+        this$KeyboardListener.rotationListener_0();
       else if (tmp$_0 === 39)
-        this$KeyboardListener.listener_0(Movement$Right_getInstance());
+        this$KeyboardListener.movementListener_0(Movement$Right_getInstance());
       else if (tmp$_0 === 40)
-        this$KeyboardListener.listener_0(Movement$Down_getInstance());
+        this$KeyboardListener.movementListener_0(Movement$Down_getInstance());
     };
   }
   KeyboardListener.prototype.run = function () {
@@ -828,12 +854,17 @@
       closure$game.movementTick_k2jd1i$(mv, false);
     };
   }
+  function main$lambda_0(closure$game) {
+    return function () {
+      closure$game.rotateFocusFigure();
+    };
+  }
   function main$lambda$lambda(closure$game) {
     return function () {
       closure$game.movementTick_k2jd1i$(Movement$Down_getInstance(), true);
     };
   }
-  function main$lambda_0(closure$game, closure$gravityTimeout) {
+  function main$lambda_1(closure$game, closure$gravityTimeout) {
     return function (it) {
       closure$game.start();
       return window.setInterval(main$lambda$lambda(closure$game), closure$gravityTimeout);
@@ -847,11 +878,11 @@
       var drawingBoard = new DrawingBoard(Kotlin.isType(tmp$_0 = gameCanvas.getContext('2d'), CanvasRenderingContext2D) ? tmp$_0 : Kotlin.throwCCE(), cellSize);
       var board = TetrisBoard$Companion_getInstance().create_y7vy3d$(22, 10, []);
       var game = new Game(drawingBoard, board);
-      (new KeyboardListener(main$lambda(game))).run();
+      (new KeyboardListener(main$lambda(game), main$lambda_0(game))).run();
       gameCanvas.height = Kotlin.imul(board.data.length, cellSize);
       gameCanvas.width = Kotlin.imul(board.data[0].length, cellSize);
       var gravityTimeout = 500;
-      gameCanvas.onclick = main$lambda_0(game, gravityTimeout);
+      gameCanvas.onclick = main$lambda_1(game, gravityTimeout);
       println('Init done');
     }
      catch (initError) {

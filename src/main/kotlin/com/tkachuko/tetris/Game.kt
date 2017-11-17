@@ -14,6 +14,12 @@ class Game(private val drawing: DrawingBoard,
         drawing.render(board)
     }
 
+    fun rotateFocusFigure() {
+        val nextFigure = board.rotate(focusFigure)
+        focusFigure = nextFigure
+        drawing.render(board)
+    }
+
     private fun createNextFigure(): FocusFigure {
         return FocusFigure.random(board.middle())
     }

@@ -20,7 +20,10 @@ fun main(args: Array<String>) {
         val board = TetrisBoard.create(22, 10)
         val game = Game(drawingBoard, board)
 
-        KeyboardListener({ mv -> game.movementTick(mv, false) }).run()
+        KeyboardListener(
+                { mv -> game.movementTick(mv, false) },
+                { game.rotateFocusFigure() }
+        ).run()
 
         gameCanvas.height = board.data.size * cellSize
         gameCanvas.width = board.data[0].size * cellSize

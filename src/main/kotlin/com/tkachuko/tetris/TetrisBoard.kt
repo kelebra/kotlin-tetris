@@ -19,19 +19,32 @@ data class TetrisBoard(val data: Array<Array<Cell>>) {
         cells.forEach { data[it.y][it.x] = it.erased() }
     }
 
+    private fun isValidMove(previous: FocusFigure, vararg moved: Cell): Boolean {
+        return moved
+                .filterNot { previous.cells.contains(it) }
+                .all { within(it) && data[it.y][it.x].isEmpty() }
+    }
+
     fun draw(vararg cells: Cell) {
         cells.forEach { data[it.y][it.x] = it }
     }
 
+    fun rotate(figure: FocusFigure): FocusFigure {
+        val rotated = figure.cells.map { it.rotateAround(figure.center) }.toTypedArray()
+        if(isValidMove(figure, *rotated)) {
+            erase(*figure.cells)
+            draw(*rotated)
+            return figure.copy(cells = rotated)
+        }
+        return figure
+    }
+
     fun move(figure: FocusFigure, movement: Movement): FocusFigure {
         val moved = figure.cells.map { it.move(movement) }.toTypedArray()
-        val canMove = moved
-                .filterNot { figure.cells.contains(it) }
-                .all { within(it) && data[it.y][it.x].isEmpty() }
-        if (canMove) {
+        if (isValidMove(figure, *moved)) {
             erase(*figure.cells)
             draw(*moved)
-            return FocusFigure(figure.type, figure.center.move(movement), moved)
+            return figure.copy(center = figure.center.move(movement), cells = moved)
         }
         return figure
     }
