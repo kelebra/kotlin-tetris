@@ -12,10 +12,10 @@ class KeyboardListener(private val startGame: () -> Unit,
         document.onkeydown = { event ->
             when ((event as KeyboardEvent).keyCode) {
                 37 -> movementListener(Movement.Left)
-                38 -> rotationListener()
                 39 -> movementListener(Movement.Right)
                 40 -> movementListener(Movement.Down)
                 13 -> startGame()
+                38 -> rotationListener()
             }
         }
     }
