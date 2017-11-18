@@ -6,6 +6,8 @@ class Game(private val drawing: DrawingBoard,
     private var focusFigure = createNextFigure()
 
     fun movementTick(movement: Movement, shouldChangeFigure: Boolean) {
+        board.clearFilledRows()
+
         val nextFigure = board.move(focusFigure, movement)
         val focusFigureTheSame = focusFigure == nextFigure
 
