@@ -506,10 +506,11 @@
   }
   Game.prototype.movementTick_k2jd1i$ = function (movement, shouldChangeFigure) {
     var tmp$;
-    this.board_0.clearFilledRows();
     var nextFigure = this.board_0.move_7cqm11$(this.focusFigure_0, movement);
     var focusFigureTheSame = (tmp$ = this.focusFigure_0) != null ? tmp$.equals(nextFigure) : null;
     this.focusFigure_0 = focusFigureTheSame && shouldChangeFigure ? this.createNextFigure_0() : nextFigure;
+    if (focusFigureTheSame)
+      this.board_0.clearFilledRows();
     this.drawing_0.render_hlbjrj$(this.board_0);
   };
   Game.prototype.rotateFocusFigure = function () {
