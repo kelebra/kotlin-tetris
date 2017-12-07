@@ -1,11 +1,13 @@
 package com.tkachuko.tetris
 
 import org.w3c.dom.CanvasRenderingContext2D
+import org.w3c.dom.HTMLSpanElement
 
 class DrawingBoard(private val ctx: CanvasRenderingContext2D,
+                   private val score: HTMLSpanElement,
                    private val cellSize: Int) {
 
-    fun render(board: TetrisBoard) {
+    fun render(board: TetrisBoard, score: Int) {
         ctx.clearRect(0.0, 0.0, ctx.canvas.width.toDouble(), ctx.canvas.height.toDouble());
         board.data
                 .flatten()
@@ -19,5 +21,6 @@ class DrawingBoard(private val ctx: CanvasRenderingContext2D,
                             cellSize.toDouble()
                     )
                 }
+        this.score.innerText = ("Score: " + score)
     }
 }

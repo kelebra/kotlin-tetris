@@ -5,6 +5,7 @@ import com.tkachuko.tetris.TetrisBoard
 import com.tkachuko.tetris.keyboard.KeyboardListener
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLCanvasElement
+import org.w3c.dom.HTMLSpanElement
 import kotlin.browser.document
 import kotlin.browser.window
 
@@ -13,11 +14,14 @@ fun main(args: Array<String>) {
         val gameCanvas =
                 document.getElementById("game") as HTMLCanvasElement
 
+        val scoreSpan =
+                document.getElementById("score") as HTMLSpanElement
+
         val cellSize = 30
         val drawingBoard = DrawingBoard(
-                gameCanvas.getContext("2d") as CanvasRenderingContext2D, cellSize)
+                gameCanvas.getContext("2d") as CanvasRenderingContext2D, scoreSpan, cellSize)
 
-        val board = TetrisBoard.create(22, 10)
+        val board = TetrisBoard.create(20, 10)
         val game = Game(drawingBoard, board)
 
         gameCanvas.height = board.data.size * cellSize

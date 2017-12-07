@@ -67,11 +67,13 @@ data class TetrisBoard(val data: Array<Array<Cell>>) {
         return Cell(data[0].size / 2, 1)
     }
 
-    fun clearFilledRows() {
-        if (isFull()) return
+    fun clearFilledRows(): Int {
+        if (isFull()) return 0
 
         val rowsToClear = data.filter { isRowFull(it) }.map { it[0].y }
         rowsToClear.sorted().forEach(this::shiftDown)
+
+        return rowsToClear.distinct().size
     }
 
     override fun toString(): String {

@@ -11,6 +11,7 @@
   var contains = Kotlin.kotlin.collections.contains_mjy6jw$;
   var downTo = Kotlin.kotlin.ranges.downTo_dqglrj$;
   var sorted = Kotlin.kotlin.collections.sorted_exjks8$;
+  var distinct = Kotlin.kotlin.collections.distinct_7wnvza$;
   var joinToString = Kotlin.kotlin.collections.joinToString_cgipc5$;
   var println = Kotlin.kotlin.io.println_s8jyv4$;
   Color.prototype = Object.create(Enum.prototype);
@@ -176,11 +177,12 @@
     }
   }
   Color.valueOf_61zpoe$ = Color$valueOf;
-  function DrawingBoard(ctx, cellSize) {
+  function DrawingBoard(ctx, score, cellSize) {
     this.ctx_0 = ctx;
+    this.score_0 = score;
     this.cellSize_0 = cellSize;
   }
-  DrawingBoard.prototype.render_hlbjrj$ = function (board) {
+  DrawingBoard.prototype.render_v66g67$ = function (board, score) {
     this.ctx_0.clearRect(0.0, 0.0, this.ctx_0.canvas.width, this.ctx_0.canvas.height);
     var $receiver = flatten(board.data);
     var destination = Kotlin.kotlin.collections.ArrayList_init_ww73n8$();
@@ -198,6 +200,7 @@
       this.ctx_0.fillStyle = element_0.color;
       this.ctx_0.fillRect(element_0.x * this.cellSize_0, element_0.y * this.cellSize_0, this.cellSize_0, this.cellSize_0);
     }
+    this.score_0.innerText = 'Score: ' + Kotlin.toString(score);
   };
   DrawingBoard.$metadata$ = {
     kind: Kotlin.Kind.CLASS,
@@ -503,6 +506,7 @@
     this.drawing_0 = drawing;
     this.board_0 = board;
     this.focusFigure_0 = this.createNextFigure_0();
+    this.score_0 = 0;
   }
   Game.prototype.movementTick_k2jd1i$ = function (movement, shouldChangeFigure) {
     var tmp$;
@@ -510,20 +514,36 @@
     var focusFigureTheSame = (tmp$ = this.focusFigure_0) != null ? tmp$.equals(nextFigure) : null;
     this.focusFigure_0 = focusFigureTheSame && shouldChangeFigure ? this.createNextFigure_0() : nextFigure;
     if (focusFigureTheSame)
-      this.board_0.clearFilledRows();
-    this.drawing_0.render_hlbjrj$(this.board_0);
+      this.updateScore_0(this.board_0.clearFilledRows());
+    this.drawing_0.render_v66g67$(this.board_0, this.score_0);
+  };
+  Game.prototype.updateScore_0 = function (clearedRows) {
+    var tmp$;
+    tmp$ = this.score_0;
+    var tmp$_0;
+    if (clearedRows === 1)
+      tmp$_0 = 40;
+    else if (clearedRows === 2)
+      tmp$_0 = 100;
+    else if (clearedRows === 3)
+      tmp$_0 = 300;
+    else if (clearedRows === 4)
+      tmp$_0 = 1200;
+    else
+      tmp$_0 = 0;
+    this.score_0 = tmp$ + tmp$_0 | 0;
   };
   Game.prototype.rotateFocusFigure = function () {
     var nextFigure = this.board_0.rotate_enfezm$(this.focusFigure_0);
     this.focusFigure_0 = nextFigure;
-    this.drawing_0.render_hlbjrj$(this.board_0);
+    this.drawing_0.render_v66g67$(this.board_0, this.score_0);
   };
   Game.prototype.createNextFigure_0 = function () {
     return FocusFigure$Companion_getInstance().random_uv1uzk$(this.board_0.middle());
   };
   Game.prototype.start = function () {
     this.board_0.draw_rxtk0p$(this.focusFigure_0.cells.slice());
-    this.drawing_0.render_hlbjrj$(this.board_0);
+    this.drawing_0.render_v66g67$(this.board_0, this.score_0);
   };
   Game.$metadata$ = {
     kind: Kotlin.Kind.CLASS,
@@ -790,7 +810,7 @@
   };
   TetrisBoard.prototype.clearFilledRows = function () {
     if (this.isFull())
-      return;
+      return 0;
     var $receiver = this.data;
     var destination = Kotlin.kotlin.collections.ArrayList_init_ww73n8$();
     var tmp$;
@@ -817,6 +837,7 @@
       var element_0 = tmp$_1.next();
       action(element_0);
     }
+    return distinct(rowsToClear).size;
   };
   function TetrisBoard$toString$lambda(it) {
     var destination = Kotlin.kotlin.collections.ArrayList_init_ww73n8$(it.length);
@@ -853,21 +874,26 @@
     this.startGame_0 = startGame;
     this.movementListener_0 = movementListener;
     this.rotationListener_0 = rotationListener;
+    this.enableFigureRotation = false;
   }
   function KeyboardListener$run$lambda(this$KeyboardListener) {
     return function (event) {
-      var tmp$, tmp$_0;
-      tmp$_0 = (Kotlin.isType(tmp$ = event, KeyboardEvent) ? tmp$ : Kotlin.throwCCE()).keyCode;
-      if (tmp$_0 === 37)
-        this$KeyboardListener.movementListener_0(Movement$Left_getInstance());
-      else if (tmp$_0 === 38)
-        this$KeyboardListener.rotationListener_0();
-      else if (tmp$_0 === 39)
-        this$KeyboardListener.movementListener_0(Movement$Right_getInstance());
-      else if (tmp$_0 === 40)
-        this$KeyboardListener.movementListener_0(Movement$Down_getInstance());
-      else if (tmp$_0 === 13)
+      var tmp$;
+      var keyCode = (Kotlin.isType(tmp$ = event, KeyboardEvent) ? tmp$ : Kotlin.throwCCE()).keyCode;
+      if (this$KeyboardListener.enableFigureRotation) {
+        if (keyCode === 37)
+          this$KeyboardListener.movementListener_0(Movement$Left_getInstance());
+        else if (keyCode === 39)
+          this$KeyboardListener.movementListener_0(Movement$Right_getInstance());
+        else if (keyCode === 40)
+          this$KeyboardListener.movementListener_0(Movement$Down_getInstance());
+        else if (keyCode === 38)
+          this$KeyboardListener.rotationListener_0();
+      }
+       else if (keyCode === 13) {
+        this$KeyboardListener.enableFigureRotation = true;
         this$KeyboardListener.startGame_0();
+      }
     };
   }
   KeyboardListener.prototype.run = function () {
@@ -900,12 +926,13 @@
     };
   }
   function main(args) {
-    var tmp$, tmp$_0;
+    var tmp$, tmp$_0, tmp$_1;
     try {
       var gameCanvas = Kotlin.isType(tmp$ = document.getElementById('game'), HTMLCanvasElement) ? tmp$ : Kotlin.throwCCE();
+      var scoreSpan = Kotlin.isType(tmp$_0 = document.getElementById('score'), HTMLSpanElement) ? tmp$_0 : Kotlin.throwCCE();
       var cellSize = 30;
-      var drawingBoard = new DrawingBoard(Kotlin.isType(tmp$_0 = gameCanvas.getContext('2d'), CanvasRenderingContext2D) ? tmp$_0 : Kotlin.throwCCE(), cellSize);
-      var board = TetrisBoard$Companion_getInstance().create_y7vy3d$(22, 10, []);
+      var drawingBoard = new DrawingBoard(Kotlin.isType(tmp$_1 = gameCanvas.getContext('2d'), CanvasRenderingContext2D) ? tmp$_1 : Kotlin.throwCCE(), scoreSpan, cellSize);
+      var board = TetrisBoard$Companion_getInstance().create_y7vy3d$(20, 10, []);
       var game = new Game(drawingBoard, board);
       gameCanvas.height = Kotlin.imul(board.data.length, cellSize);
       gameCanvas.width = Kotlin.imul(board.data[0].length, cellSize);

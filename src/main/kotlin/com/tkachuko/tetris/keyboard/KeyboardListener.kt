@@ -8,14 +8,21 @@ class KeyboardListener(private val startGame: () -> Unit,
                        private val movementListener: (Movement) -> Unit,
                        private val rotationListener: () -> Unit) {
 
+    var enableFigureRotation = false
+
     fun run() {
         document.onkeydown = { event ->
-            when ((event as KeyboardEvent).keyCode) {
-                37 -> movementListener(Movement.Left)
-                39 -> movementListener(Movement.Right)
-                40 -> movementListener(Movement.Down)
-                13 -> startGame()
-                38 -> rotationListener()
+            val keyCode = (event as KeyboardEvent).keyCode
+            if (enableFigureRotation) {
+                when (keyCode) {
+                    37 -> movementListener(Movement.Left)
+                    39 -> movementListener(Movement.Right)
+                    40 -> movementListener(Movement.Down)
+                    38 -> rotationListener()
+                }
+            } else if (keyCode == 13) {
+                enableFigureRotation = true
+                startGame()
             }
         }
     }
